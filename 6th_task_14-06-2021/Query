@@ -1,0 +1,36 @@
+1- write a query to fill this table with 10 rows
+------------------------------------------------
+INSERT INTO `customers`(`CustomerName`, `ContactName`, `Address`, `City`, `PostalCode`, `Country`) VALUES ('Ahmed','Ali','Haram','Cairo','+2','Egypt');
+INSERT INTO `customers`(`CustomerName`, `ContactName`, `Address`, `City`, `PostalCode`, `Country`) VALUES ('Hassan','Hossam','Dar Essalam','Cairo','+2','Egypt');
+INSERT INTO `customers`(`CustomerName`, `ContactName`, `Address`, `City`, `PostalCode`, `Country`) VALUES ('Alaa','Sayed','Sayeda Zaynab','Cairo','+2','Egypt');
+INSERT INTO `customers`(`CustomerName`, `ContactName`, `Address`, `City`, `PostalCode`, `Country`) VALUES ('Youssuf','Ahmed','Haram','Giza','+2','Egypt');
+INSERT INTO `customers`(`CustomerName`, `ContactName`, `Address`, `City`, `PostalCode`, `Country`) VALUES ('Alyaa','Hassan','Agoza','Giza','+2','Egypt');
+INSERT INTO `customers`(`CustomerName`, `ContactName`, `Address`, `City`, `PostalCode`, `Country`) VALUES ('Hanaa','Ali','Faisal','Giza','+2','Egypt');
+INSERT INTO `customers`(`CustomerName`, `ContactName`, `Address`, `City`, `PostalCode`, `Country`) VALUES ('Khadiga','Usama','Zahraa','Cairo','+2','Egypt');
+INSERT INTO `customers`(`CustomerName`, `ContactName`, `Address`, `City`, `PostalCode`, `Country`) VALUES ('Abdullah','Mohammed','El Raml','Alexandria','+4','Egypt');
+INSERT INTO `customers`(`CustomerName`, `ContactName`, `Address`, `City`, `PostalCode`, `Country`) VALUES ('Hady','Ahmed','Haram','Giza','+2','Egypt');
+INSERT INTO `customers`(`CustomerName`, `ContactName`, `Address`, `City`, `PostalCode`, `Country`) VALUES ('Zyad','Nader','Manial','Cairo','+2','Egypt');
+
+INSERT INTO `customers`(`CustomerName`, `ContactName`, `Address`, `City`, `PostalCode`, `Country`) VALUES ('Ahmed','Ali','Haram','Cairo','+2','Egypt'), ('Hassan','Hossam','Dar Essalam','Cairo','+2','Egypt'), ('Alaa','Sayed','Sayeda Zaynab','Cairo','+2','Egypt'), ('Youssuf','Ahmed','Haram','Giza','+2','Egypt'), ('Alyaa','Hassan','Agoza','Giza','+2','Egypt'), ('Hanaa','Ali','Faisal','Giza','+2','Egypt'), ('Khadiga','Usama','Zahraa','Cairo','+2','Egypt'), ('Abdullah','Mohammed','El Raml','Alexandria','+4','Egypt'), ('Hady','Ahmed','Haram','Giza','+2','Egypt'), ('Zyad','Nader','Manial','Cairo','+2','Egypt');
+-----------------------------------------------------------------------------------------
+
+2- write a query to update  address of all rows
+-----------------------------------------------
+UPDATE `customers` SET `Address`='Haram';
+-----------------------------------------------------------------------------------------
+
+3- write a query to update city for (id = 9)
+-----------------------------------------------
+UPDATE `customers` SET `city`='Haram' WHERE `CustomerID` = 9;
+-----------------------------------------------------------------------------------------
+
+4- write a query to delete records that have ids (1,2,3,4)
+----------------------------------------------------------
+DELETE FROM `customers` WHERE `CustomerID`IN (1,2,3,4);
+-----------------------------------------------------------------------------------------
+
+5- write a query to fetch rows  that have a name started with chars (mo).
+-------------------------------------------------------------------------
+SELECT * FROM `customers` WHERE `CustomerName` LIKE 'mo%';
+-----------------------------------------------------------------------------------------
+
