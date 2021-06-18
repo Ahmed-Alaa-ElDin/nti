@@ -1,9 +1,19 @@
 <?php
 require('con.php');
 
-$query = "SELECT * FROM `products`";
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['search'])) {
+        $search = $_GET['search'];
+        $query = "SELECT * FROM `products` WHERE `name` LIKE '%$search%'";
 
-$run = mysqli_query($con, $query);
+        $run = mysqli_query($con, $query);
+} else {
+    $query = "SELECT * FROM `products`";
+    
+    $run = mysqli_query($con, $query);
+}
+
+
+
 ?>
 <!-- Create 2 php files one of them has a form with the following inputs (name, email, password, address, gender, linkedin url) Validate inputs then store data into session, when user open the second file can show stored data. -->
 <!DOCTYPE html>
@@ -39,6 +49,14 @@ $run = mysqli_query($con, $query);
             border-radius: 20px;
         }
 
+        .searchDiv {
+            display: flex;
+            margin: 1em auto;
+            width: 50vw;
+            justify-content: center;
+            justify-items:center;
+        }
+
         h2 {
             margin: auto;
             margin-bottom: 0.75em;
@@ -48,6 +66,7 @@ $run = mysqli_query($con, $query);
         }
 
         table {
+            margin: auto;
             max-width: 80vw;
             text-align: center;
             color: #fff;
@@ -68,9 +87,20 @@ $run = mysqli_query($con, $query);
             color: #000;
         }
 
+        input {
+            padding: 0.5em;
+            border-radius: 10px;
+            outline: none;
+            border: 0;
+            width: 300px;
+            text-align: center;
+
+        }
+
         .addButton,
         .editButton,
-        .deleteButton {
+        .deleteButton,
+        .searchButton {
             display: inline-block;
             font-weight: bold;
             color: #fff;
@@ -112,6 +142,17 @@ $run = mysqli_query($con, $query);
         .deleteButton:hover {
             background-color: #c0392b;
         }
+
+        .searchButton {
+            background-color: #ecf0f1;
+            color: #000;
+            width: max-content;
+        }
+
+        .searchButton:hover {
+            background-color: #bdc3c7;
+        }
+
 
         .errorMessage {
             background-color: #ff7979;
@@ -168,6 +209,18 @@ $run = mysqli_query($con, $query);
             <div class="addButtonDiv">
                 <a href="create.php" class="addButton">Add New Product</a>
             </div>
+
+            <div class="searchDiv">
+                <form action="<?= $_SERVER['PHP_SELF'] ?>" method="get">
+                    <input type="search" name="search" value="<?php 
+                    if (isset($_GET['search'])) {
+                        echo $_GET['search'];
+                    }
+                    ?>" placeholder="Enter search word">
+                    <input type="submit" value="Search" class="searchButton">
+                </form>
+            </div>
+
             <h2>All Products</h2>
             <table>
                 <tr>

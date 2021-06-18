@@ -9,7 +9,7 @@ if (isset($_REQUEST['id'])) {
 
         $run = mysqli_query($con, $query);
 
-        if ($run->num_rows > 0) {
+        if ($run) {
             $_SESSION['successMessage'] = 'Product has been deleted successfully';
             
             header("Location:index.php");
@@ -20,7 +20,7 @@ if (isset($_REQUEST['id'])) {
         }
     }
 } else {
-    $_SESSION['errorMessage'] = 'Please choose the right product first';
+    $_SESSION['errorMessage'] = $run->num_rows;
 
     header("Location:index.php");
 }
