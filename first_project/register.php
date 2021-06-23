@@ -1,27 +1,21 @@
-<!DOCTYPE html>
-<html class="loading" lang="en" data-textdirection="ltr">
-
-<head>
-    <title>Courses4U - Register</title>
-    <?php
-    include('../includes/head.php');
-    ?>
-    <style>
-        .badge {
+<?php
+// prerequisite variables
+$title = 'Courses4U - Register';
+$style =
+    `.badge {
             white-space: unset;
             line-height: unset;
-        }
-    </style>
-</head>
+        }`;
 
-<?php
+include(dirname(__DIR__) . '/first_project/includes/head.php');
+
 // check if the user logged in
 if (isset($_SESSION['user'])) {
     if ($_SESSION['user']['role_id'] == 1) {
-        header("Location: dashboard.php");
+        header("Location: teacher/");
         exit();
     } else {
-        header("Location: home.php");
+        header("Location: student/");
         exit();
     }
 }
@@ -156,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ])) {
             $_SESSION['errorMessages']['password'] = 'Your password must contain at least <strong> 8 characters</strong>, <strong>1 UPPERCASE letter</strong>, <strong>1 lowercase letter</strong>, <strong>1 number</strong> &amp; <strong>1 speci@l ch@r@cter</strong>';
         } else {
-            $_SESSION['data']['password'] = password_hash($password, PASSWORD_DEFAULT);
+            $_SESSION['data']['password'] = sha1($password);
         }
     } else {
         $_SESSION['errorMessages']['password'] = 'Please enter <strong>Password</strong>';
@@ -225,21 +219,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (isset($_FILES["profile_img"])) {
-        print_r($_FILES["profile_img"]);
-        $target_dir = "../uploads/";
-        $fileName = basename($_FILES["profile_img"]["name"]);
-        $imageFileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        $newName = rand() . time() . '.' . $imageFileType;
-        $target_file = $target_dir . $newName;
+        // print_r($_FILES["profile_img"]);
 
         // Check if image file is a actual image or fake image
         if (empty($_FILES["profile_img"]["tmp_name"]) || !getimagesize($_FILES["profile_img"]["tmp_name"])) {
-            if ($_SESSION['data']['role_id'] == 1) {
+            if (isset($_SESSION['data']['role_id']) && $_SESSION['data']['role_id'] == 1) {
                 $_SESSION['data']['profile_img'] = 'default_teacher.png	';
             } else {
                 $_SESSION['data']['profile_img'] = 'default_student.png	';
             }
         } else {
+            $target_dir = dirname(__DIR__) ."/first_project/uploads/";
+            $fileName = basename($_FILES["profile_img"]["name"]);
+            $imageFileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $newName = rand() . time() . '.' . $imageFileType;
+            $target_file = $target_dir . $newName;
+
             // Check if file already exists
             if (file_exists($target_file)) {
                 $_SESSION['errorMessages']['profile_img'] = 'Sorry, <strong>file already exists</strong>';
@@ -260,8 +255,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $check = move_uploaded_file($_FILES["profile_img"]["tmp_name"], $target_file);
                 $_SESSION['data']['profile_img'] = $newName;
                 if (!$check) {
-                    print_r($check);
-                    return false;
+                    // print_r($check);
+                    // return false;
                 }
             }
         }
@@ -293,10 +288,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['user']['first_name']   =   $_SESSION['data']['first_name'];
             $_SESSION['user']['last_name']    =   $_SESSION['data']['last_name'];
             $_SESSION['user']['email']        =   $_SESSION['data']['email'];
-            $_SESSION['user']['profile_img']      =   $_SESSION['data']['profile_img'];
+            $_SESSION['user']['profile_img']  =   $_SESSION['data']['profile_img'];
             $_SESSION['user']['role_id']      =   $_SESSION['data']['role_id'];
 
-            
+
             // clear session data and error messages
             if (isset($_SESSION['errorMessages'])) {
                 unset($_SESSION['errorMessages']);
@@ -307,13 +302,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_SESSION['data'])) {
                 unset($_SESSION['data']);
             }
-            
+
             // redirect to home page
             if ($_SESSION['user']['role_id'] == 1) {
-                header("Location: dashboard.php");
+                header("Location: teacher/");
                 exit();
             } else {
-                header("Location: home.php");
+                header("Location: student/");
                 exit();
             }
         }
@@ -327,15 +322,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- Top Bar-->
     <?php
-    include('../includes/top-bar.php');
+    include(dirname(__DIR__) .'/first_project/includes/top-bar.php');
     ?>
     <!-- ////////////////////////////////////////////////////////////////////////////-->
 
     <!-- Side Bar -->
-    <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true" data-img="../theme-assets/images/backgrounds/02.jpg">
+    <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true" data-img="theme-assets/images/backgrounds/02.jpg">
         <div class="navbar-header">
             <ul class="nav navbar-nav flex-row">
-                <li class="nav-item m-auto text-center"><a class="navbar-brand" href="home.html"><img class="brand-logo" alt="Chameleon admin logo" src="../theme-assets/images/logo/logo.png" />
+                <li class="nav-item m-auto text-center"><a class="navbar-brand" href="home.html"><img class="brand-logo" alt="Chameleon admin logo" src="theme-assets/images/logo/logo.png" />
                         <h3 class="brand-text">Courses<span class="text-danger">4</span><span class="text-primary">U</span></h3>
                     </a></li>
                 <li class="nav-item d-md-none"><a class="nav-link close-navbar"><i class="ft-x"></i></a></li>
@@ -498,11 +493,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- ////////////////////////////////////////////////////////////////////////////-->
 
     <?php
-    include('../includes/footer.php');
+    include(dirname(__DIR__) . '/first_project/includes/footer.php');
     ?>
 
     <?php
-    include('../includes/scripts.php');
+    include(dirname(__DIR__) . '/first_project/includes/scripts.php');
     ?>
 
     <script>
@@ -513,7 +508,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $('#city').html(`<option class="text-muted" value="">Choose Your City</option>`);
 
                 $.ajax({
-                    url: '../ajax/getCity.php',
+                    url: 'ajax/getCity.php',
                     data: {
                         'country_id': country_id
                     },

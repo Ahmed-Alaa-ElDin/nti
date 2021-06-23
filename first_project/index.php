@@ -1,5 +1,6 @@
 <?php 
     include(dirname(__DIR__) . "/first_project/includes/footer.php");
+    echo dirname(__DIR__);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +12,6 @@
     
 </head>
 <body>
-    <a href="<?='/'?>">sadasda</a>
-    asdads
+
 </body>
 </html>

@@ -51,16 +51,19 @@
                     <?php
                     if (isset($_SESSION['user'])) {
                     ?>
-                        <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"> <span class="avatar avatar-online"><img src="../uploads/<?= $_SESSION['user']['profile_img'] ?>" alt="avatar"><i></i></span></a>
+                        <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"> <span class="avatar avatar-online"><img src="/nti/first_project/uploads/<?= $_SESSION['user']['profile_img'] ?>" alt="avatar"><i></i></span></a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <div class="arrow_box_right"><a class="dropdown-item" href="#"><span class="avatar avatar-online"><img src="../uploads/<?= $_SESSION['user']['profile_img'] ?>" alt="avatar"><span class="user-name text-bold-700 ml-1"><?= $_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name'] ?></span></span></a>
-                                    <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
-                                        <i class="ft-user"></i> Edit Profile</a>
-                                    <!-- <a class="dropdown-item" href="#"><i class="ft-mail"></i> My Inbox</a> -->
-                                    <!-- <a class="dropdown-item" href="#"><i class="ft-check-square"></i> Task</a> -->
-                                    <!-- <a class="dropdown-item" href="#"><i class="ft-message-square"></i> Chats</a> -->
+                                <div class="arrow_box_right">
+                                    <div class="dropdown-item overflow-hidden pr-2" href="#">
+                                        <span class="avatar avatar-online">
+                                            <img src="/nti/first_project/uploads/<?= $_SESSION['user']['profile_img'] ?>" alt="avatar">
+                                            <span class="user-name text-bold-700 ml-1"><?= $_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name'] ?></span>
+                                        </span>
+                                    </div>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="logout.php"><i class="ft-power"></i> Logout</a>
+                                    <a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/nti/first_project/logout.php"><i class="ft-power"></i> Logout</a>
                                 </div>
                             </div>
                         </li>
