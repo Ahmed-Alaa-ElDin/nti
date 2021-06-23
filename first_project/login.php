@@ -3,10 +3,10 @@
 $teacher = false;
 $title = 'Courses4U - Log In';
 $style =
-    `.badge {
+    '.badge {
             white-space: unset;
             line-height: unset;
-        }`;
+        }';
 
 // include head tag
 include(dirname(__DIR__) . '/first_project/includes/head.php');

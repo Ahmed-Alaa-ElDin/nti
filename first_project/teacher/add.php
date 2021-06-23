@@ -1,25 +1,18 @@
 <?php
 // prerequisite variables
-$title = 'Courses4U - Register';
+$addTeacher = true;
+
+$title = 'Courses4U - Add New Teacher';
+
 $style =
-    '.badge {
+'.badge {
             white-space: unset;
             line-height: unset;
         }';
-
-include(dirname(__DIR__) . '/first_project/includes/head.php');
-
-// check if the user logged in
-if (isset($_SESSION['user'])) {
-    if ($_SESSION['user']['role_id'] == 1) {
-        header("Location: teacher/");
-        exit();
-    } else {
-        header("Location: student/");
-        exit();
-    }
-}
-
+        
+        include(dirname(__DIR__) . '/includes/head.php');
+        include(dirname(__DIR__) . '/permission/isTeacher.php');
+        
 // Declaration of cleaning function
 function clean($request)
 {
@@ -199,37 +192,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Validate Role
-    if (isset($_POST['role_id'])) {
-        $role_id = clean($_POST['role_id']);
-        if (empty($role_id)) {
-            $_SESSION['errorMessages']['role_id'] = 'Please Choose your <strong>Role</strong>';
-        } elseif (!filter_var($role_id, FILTER_VALIDATE_INT)) {
-            $_SESSION['errorMessages']['role_id'] = 'Please Choose your <strong>Role</strong>';
-            $_SESSION['oldData']['role_id'] = $role_id;
-        } elseif (!in_array($role_id, [1, 2])) {
-            $_SESSION['errorMessages']['role_id'] = 'Please Choose your <strong>Role</strong>';
-            $_SESSION['oldData']['role_id'] = $role_id;
-        } else {
-            $_SESSION['data']['role_id'] = $role_id;
-            $_SESSION['oldData']['role_id'] = $role_id;
-        }
-    } else {
-        $_SESSION['errorMessages']['role_id'] = 'Please Choose your <strong>Role</strong>';
-    }
-
     if (isset($_FILES["profile_img"])) {
-        // print_r($_FILES["profile_img"]);
 
         // Check if image file is a actual image or fake image
         if (empty($_FILES["profile_img"]["tmp_name"]) || !getimagesize($_FILES["profile_img"]["tmp_name"])) {
-            if (isset($_SESSION['data']['role_id']) && $_SESSION['data']['role_id'] == 1) {
-                $_SESSION['data']['profile_img'] = 'default_teacher.png	';
-            } else {
-                $_SESSION['data']['profile_img'] = 'default_student.png	';
-            }
+            $_SESSION['data']['profile_img'] = 'default_teacher.png	';
         } else {
-            $target_dir = dirname(__DIR__) ."/first_project/uploads/";
+            $target_dir = dirname(__DIR__) . "/uploads/";
             $fileName = basename($_FILES["profile_img"]["name"]);
             $imageFileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
             $newName = rand() . time() . '.' . $imageFileType;
@@ -254,27 +223,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (empty($_SESSION['errorMessages']['profile_img'])) {
                 $check = move_uploaded_file($_FILES["profile_img"]["tmp_name"], $target_file);
                 $_SESSION['data']['profile_img'] = $newName;
-                if (!$check) {
-                    // print_r($check);
-                    // return false;
-                }
             }
         }
     } else {
-        if ($_SESSION['data']['role_id'] == 1) {
-            $_SESSION['data']['profile_img'] = 'default_teacher.png	';
-        } else {
-            $_SESSION['data']['profile_img'] = 'default_student.png	';
-        }
+        $_SESSION['data']['profile_img'] = 'default_teacher.png	';
     }
 
     // check validation success and insert user
     if (empty($_SESSION['errorMessages'])) {
-        if ($_SESSION['data']['role_id'] == 1) {
-            $insertQuery = "INSERT INTO `teachers`(`first_name`, `last_name`, `age`, `phone`, `email`, `password`, `gender`, `country_id`, `city_id`, `profile_img`) VALUES (?,?,?,?,?,?,?,?,?,?)";
-        } else {
-            $insertQuery = "INSERT INTO `students`(`first_name`, `last_name`, `age`, `phone`, `email`, `password`, `gender`, `country_id`, `city_id`, `profile_img`) VALUES (?,?,?,?,?,?,?,?,?,?)";
-        }
+        $insertQuery = "INSERT INTO `teachers`(`first_name`, `last_name`, `age`, `phone`, `email`, `password`, `gender`, `country_id`, `city_id`, `profile_img`) VALUES (?,?,?,?,?,?,?,?,?,?)";
         $stmt = mysqli_prepare($con, $insertQuery);
         mysqli_stmt_bind_param($stmt, "ssisssiiis", $_SESSION['data']['first_name'], $_SESSION['data']['last_name'], $_SESSION['data']['age'], $_SESSION['data']['phone'], $_SESSION['data']['email'], $_SESSION['data']['password'], $_SESSION['data']['gender'], $_SESSION['data']['country_id'], $_SESSION['data']['city_id'], $_SESSION['data']['profile_img']);
         mysqli_stmt_execute($stmt);
@@ -282,15 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // check insert success
         if ($stmt) {
 
-            $_SESSION['successMessages'] = 'You registered successfully';
-
-            // create login session
-            $_SESSION['user']['first_name']   =   $_SESSION['data']['first_name'];
-            $_SESSION['user']['last_name']    =   $_SESSION['data']['last_name'];
-            $_SESSION['user']['email']        =   $_SESSION['data']['email'];
-            $_SESSION['user']['profile_img']  =   $_SESSION['data']['profile_img'];
-            $_SESSION['user']['role_id']      =   $_SESSION['data']['role_id'];
-
+            $_SESSION['successMessages'] = 'New Teacher Added successfully';
 
             // clear session data and error messages
             if (isset($_SESSION['errorMessages'])) {
@@ -304,13 +253,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
 
             // redirect to home page
-            if ($_SESSION['user']['role_id'] == 1) {
-                header("Location: teacher/");
-                exit();
-            } else {
-                header("Location: student/");
-                exit();
-            }
+            header("Location: /nti/first_project/teacher/all.php");
+            exit();
         }
     }
 }
@@ -322,30 +266,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- Top Bar-->
     <?php
-    include(dirname(__DIR__) .'/first_project/includes/top-bar.php');
+    include(dirname(__DIR__) . '/includes/top-bar.php');
     ?>
-    <!-- ////////////////////////////////////////////////////////////////////////////-->
+    <!-- ////////////////////////////////////////////////////////////////////////////// -->
 
-    <!-- Side Bar -->
-    <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true" data-img="theme-assets/images/backgrounds/02.jpg">
-        <div class="navbar-header">
-            <ul class="nav navbar-nav flex-row">
-                <li class="nav-item m-auto text-center"><a class="navbar-brand" href="home.html"><img class="brand-logo" alt="Chameleon admin logo" src="theme-assets/images/logo/logo.png" />
-                        <h3 class="brand-text">Courses<span class="text-danger">4</span><span class="text-primary">U</span></h3>
-                    </a></li>
-                <li class="nav-item d-md-none"><a class="nav-link close-navbar"><i class="ft-x"></i></a></li>
-            </ul>
-        </div>
-        <!-- <div class="main-menu-content">
-            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-                <li class="nav-item"><a href="index.html"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
-                </li>
-                <li class="nav-item"><a href="charts.html"><i class="ft-home"></i><span class="menu-title" data-i18n="">Home</span></a>
-                </li>
-            </ul>
-        </div> -->
-        <div class="navigation-background"></div>
-    </div>
+    <!-- Side Bar  -->
+    <?php
+    include(dirname(__DIR__) . '/includes/side-bar.php');
+    ?>
     <!-- ////////////////////////////////////////////////////////////////////////////-->
 
     <div class="app-content content">
@@ -353,7 +281,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="content-wrapper-before"></div>
             <div class="content-header row">
                 <div class="col-12 text-center my-2">
-                    <h2 class="text-white font-weight-bold">Register Form</h2>
+                    <h2 class="text-white font-weight-bold">Add New Teacher</h2>
                 </div>
             </div>
             <div class="content-body">
@@ -415,28 +343,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         </div>
 
                                         <!-- Password -->
-                                        <div class="col-md-4 form-group text-center">
+                                        <div class="offset-md-1 col-md-4 form-group text-center">
                                             <label for="password" class="font-weight-bold">Password</label>
                                             <input type="password" id="password" class="form-control" placeholder="Enter Your Password" name="password">
                                             <?= (isset($_SESSION['errorMessages']['password'])) ? "<div class='badge badge-danger mt-1 mw-100'>" . $_SESSION['errorMessages']['password'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- Password Confirmation -->
-                                        <div class="col-md-4 form-group text-center">
+                                        <div class="offset-md-2 col-md-4 form-group text-center">
                                             <label for="passwordConfirmation" class="font-weight-bold">Password Confirmation</label>
                                             <input type="password" id="passwordConfirmation" class="form-control" placeholder="Enter Your Password Again" name="password_confirmation">
                                             <?= (isset($_SESSION['errorMessages']['password_confirmation'])) ? "<div class='badge badge-danger mt-1 mw-100'>" . $_SESSION['errorMessages']['password_confirmation'] . "</div>" : ''; ?>
-                                        </div>
-
-                                        <!-- Role -->
-                                        <div class="col-md-4 form-group text-center">
-                                            <label for="role" class="font-weight-bold">Role</label>
-                                            <select class="form-control" name="role_id" id="role">
-                                                <option class="text-muted" value="">Teacher or Student</option>
-                                                <option value="1" <?= isset($_SESSION['oldData']['role_id']) && $_SESSION['oldData']['role_id'] == '1' ? 'selected' : '' ?>>Teacher</option>
-                                                <option value="2" <?= isset($_SESSION['oldData']['role_id']) && $_SESSION['oldData']['role_id'] == '2' ? 'selected' : '' ?>>Student</option>
-                                            </select>
-                                            <?= (isset($_SESSION['errorMessages']['role_id'])) ? "<div class='badge badge-danger mt-1 mw-100'>" . $_SESSION['errorMessages']['role_id'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- Country -->
@@ -493,11 +410,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- ////////////////////////////////////////////////////////////////////////////-->
 
     <?php
-    include(dirname(__DIR__) . '/first_project/includes/footer.php');
+    include(dirname(__DIR__) . '/includes/footer.php');
     ?>
 
     <?php
-    include(dirname(__DIR__) . '/first_project/includes/scripts.php');
+    include(dirname(__DIR__) . '/includes/scripts.php');
     ?>
 
     <script>
@@ -508,7 +425,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $('#city').html(`<option class="text-muted" value="">Choose Your City</option>`);
 
                 $.ajax({
-                    url: 'ajax/getCity.php',
+                    url: '../ajax/getCity.php',
                     data: {
                         'country_id': country_id
                     },

@@ -1,6 +1,5 @@
     <?php
     include(dirname(__DIR__) . '/database/con.php');
-    // echo dirname(__DIR__) . '/database/con.php';
     ?>
     <!DOCTYPE html>
     <html class="loading" lang="en" data-textdirection="ltr">
@@ -15,7 +14,9 @@
         <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i%7CComfortaa:300,400,700" rel="stylesheet">
         <link href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css" rel="stylesheet">
         <?php
+        
         include(dirname(__DIR__) . '/includes/styles.php');
+        
         if (isset($style)) {
             echo '<style>' . $style . '</style>';
         }
