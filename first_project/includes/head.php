@@ -1,5 +1,5 @@
     <?php
-    include(dirname(__DIR__) . '/database/con.php');
+    include(dirname(__DIR__) . '/database/connect.php');
     ?>
     <!DOCTYPE html>
     <html class="loading" lang="en" data-textdirection="ltr">
