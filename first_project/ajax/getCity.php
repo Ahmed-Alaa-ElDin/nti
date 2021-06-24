@@ -1,5 +1,5 @@
 <?php 
-    include('../database/con.php');
+    include('../database/connect.php');
 
     $citiesArray = [];
 
