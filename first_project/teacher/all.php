@@ -93,7 +93,7 @@ $results = mysqli_query($con, $query);
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-danger">
-                    <h4 class="modal-title text-white" id="basicModalLabel3">Basic Modal</h4>
+                    <h4 class="modal-title text-white" id="basicModalLabel3">Delete Confirmation</h4>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>

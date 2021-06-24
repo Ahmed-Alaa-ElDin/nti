@@ -61,7 +61,7 @@
                                         </span>
                                     </div>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a>
+                                    <a class="dropdown-item" href="/nti/first_project/teacher/edit.php?id=<?=$_SESSION['user']['id']?>"><i class="ft-user"></i> Edit Profile</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="/nti/first_project/logout.php"><i class="ft-power"></i> Logout</a>
                                 </div>

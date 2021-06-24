@@ -285,6 +285,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['successMessages'] = 'You registered successfully';
 
             // create login session
+            $_SESSION['user']['id']           =   mysqli_insert_id($con);
             $_SESSION['user']['first_name']   =   $_SESSION['data']['first_name'];
             $_SESSION['user']['last_name']    =   $_SESSION['data']['last_name'];
             $_SESSION['user']['email']        =   $_SESSION['data']['email'];
@@ -330,7 +331,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true" data-img="theme-assets/images/backgrounds/02.jpg">
         <div class="navbar-header">
             <ul class="nav navbar-nav flex-row">
-                <li class="nav-item m-auto text-center"><a class="navbar-brand" href="home.html"><img class="brand-logo" alt="Chameleon admin logo" src="theme-assets/images/logo/logo.png" />
+                <li class="nav-item m-auto text-center"><a class="navbar-brand" href="/nti/first_project/"><img class="brand-logo" alt="Chameleon admin logo" src="theme-assets/images/logo/logo.png" />
                         <h3 class="brand-text">Courses<span class="text-danger">4</span><span class="text-primary">U</span></h3>
                     </a></li>
                 <li class="nav-item d-md-none"><a class="nav-link close-navbar"><i class="ft-x"></i></a></li>
@@ -371,7 +372,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <!-- First Name -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="fisrtName" class="font-weight-bold">First Name</label>
-                                            <input type="text" id="fisrtName" class="form-control" placeholder="Enter Your First Name" name="first_name" value=<?= isset($_SESSION['oldData']['first_name']) ? '"' .  $_SESSION['oldData']['first_name'] . '"' : "" ?>>
+                                            <input type="text" id="fisrtName" class="form-control" placeholder="Enter Your First Name" name="first_name" value=<?= isset($_SESSION['oldData']['first_name']) ? '"' .  $_SESSION['oldData']['first_name'] . '"' : "" ?> required>
                                             <?= (isset($_SESSION['errorMessages']['first_name'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['first_name'] . "</div>" : ''; ?>
                                         </div>
 
@@ -385,7 +386,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <!-- E-mail -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="email" class="font-weight-bold">E-mail</label>
-                                            <input type="text" id="email" class="form-control" placeholder="Enter Your E-mail" name="email" value=<?= isset($_SESSION['oldData']['email']) ? '"' .  $_SESSION['oldData']['email'] . '"' : "" ?>>
+                                            <input type="text" id="email" class="form-control" placeholder="Enter Your E-mail" name="email" value=<?= isset($_SESSION['oldData']['email']) ? '"' .  $_SESSION['oldData']['email'] . '"' : "" ?> required>
                                             <?= (isset($_SESSION['errorMessages']['email'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['email'] . "</div>" : ''; ?>
                                         </div>
 
@@ -406,7 +407,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <!-- Gender -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="gender" class="font-weight-bold">Gender</label>
-                                            <select class="form-control" name="gender" id="gender">
+                                            <select class="form-control" name="gender" id="gender" required>
                                                 <option class="text-muted" value="">Choose Your Gender</option>
                                                 <option value="1" <?= isset($_SESSION['oldData']['gender']) && $_SESSION['oldData']['gender'] == '1' ? 'selected' : '' ?>>Male</option>
                                                 <option value="2" <?= isset($_SESSION['oldData']['gender']) && $_SESSION['oldData']['gender'] == '2' ? 'selected' : '' ?>>Female</option>
@@ -417,21 +418,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <!-- Password -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="password" class="font-weight-bold">Password</label>
-                                            <input type="password" id="password" class="form-control" placeholder="Enter Your Password" name="password">
+                                            <input type="password" id="password" class="form-control" placeholder="Enter Your Password" name="password" required>
                                             <?= (isset($_SESSION['errorMessages']['password'])) ? "<div class='badge badge-danger mt-1 mw-100'>" . $_SESSION['errorMessages']['password'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- Password Confirmation -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="passwordConfirmation" class="font-weight-bold">Password Confirmation</label>
-                                            <input type="password" id="passwordConfirmation" class="form-control" placeholder="Enter Your Password Again" name="password_confirmation">
+                                            <input type="password" id="passwordConfirmation" class="form-control" placeholder="Enter Your Password Again" name="password_confirmation" required>
                                             <?= (isset($_SESSION['errorMessages']['password_confirmation'])) ? "<div class='badge badge-danger mt-1 mw-100'>" . $_SESSION['errorMessages']['password_confirmation'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- Role -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="role" class="font-weight-bold">Role</label>
-                                            <select class="form-control" name="role_id" id="role">
+                                            <select class="form-control" name="role_id" id="role" required>
                                                 <option class="text-muted" value="">Teacher or Student</option>
                                                 <option value="1" <?= isset($_SESSION['oldData']['role_id']) && $_SESSION['oldData']['role_id'] == '1' ? 'selected' : '' ?>>Teacher</option>
                                                 <option value="2" <?= isset($_SESSION['oldData']['role_id']) && $_SESSION['oldData']['role_id'] == '2' ? 'selected' : '' ?>>Student</option>
@@ -442,7 +443,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <!-- Country -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="country" class="font-weight-bold">Country</label>
-                                            <select class="form-control" name="country_id" id="country">
+                                            <select class="form-control" name="country_id" id="country" required>
                                                 <option class="text-muted" value="">Choose Your Country</option>
                                                 <?php
                                                 while ($country = mysqli_fetch_array($countriesResults)) {

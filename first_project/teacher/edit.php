@@ -186,13 +186,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $oldPassword = sha1(clean($_POST['old_password']));
 
         // compare old password from database
-        $compreQuery = "SELECT `first_name` FROM `teachers` WHERE `id` = $id AND `password` = '$oldPassword'";
+        $compreQuery = "SELECT * FROM `teachers` WHERE `id` = $id AND `password` = '$oldPassword'";
         $result = mysqli_query($con, $compreQuery);
 
-        if (mysqli_num_rows($result)) {
+        if ($result) {
 
             // if the same of the old password from database validate new password
-            if (isset($_POST['new_password'])) {
+            if (isset($_POST['new_password']) && !empty($_POST['new_password'])) {
 
                 $new_password = clean($_POST['new_password']);
 
@@ -220,7 +220,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $stmt = mysqli_prepare($con, $updateQuery);
                             mysqli_stmt_bind_param($stmt, "si", $password, $id);
                             mysqli_stmt_execute($stmt);
-                            // print_r($stmt);
                         }
                     } else {
                         $_SESSION['errorMessages']['new_password_confirmation'] = 'Please enter the <strong>Password Again</strong>';
@@ -232,52 +231,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
+    if (isset($_POST["old_img"])) {
+        $_SESSION['oldData']['old_img'] = $_POST["old_img"];
 
-    // if (isset($_FILES["profile_img"])) {
+        // Check if image file is a actual image or fake image
+        if (empty($_FILES["profile_img"]["tmp_name"]) || !getimagesize($_FILES["profile_img"]["tmp_name"])) {
+            $profile_img = $_POST["old_img"];
+            $_SESSION['data']['profile_img'] = 'default_teacher.png';
+            // return false;
+        } else {
+            $target_dir = dirname(__DIR__) . "/uploads/";
+            $fileName = basename($_FILES["profile_img"]["name"]);
+            $imageFileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $newName = rand() . time() . '.' . $imageFileType;
+            $target_file = $target_dir . $newName;
 
-    //     // Check if image file is a actual image or fake image
-    //     if (empty($_FILES["profile_img"]["tmp_name"]) || !getimagesize($_FILES["profile_img"]["tmp_name"])) {
-    //         $_SESSION['data']['profile_img'] = 'default_teacher.png	';
-    //     } else {
-    //         $target_dir = dirname(__DIR__) . "/uploads/";
-    //         $fileName = basename($_FILES["profile_img"]["name"]);
-    //         $imageFileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-    //         $newName = rand() . time() . '.' . $imageFileType;
-    //         $target_file = $target_dir . $newName;
+            // Check if file already exists
+            if (file_exists($target_file)) {
+                $_SESSION['errorMessages']['profile_img'] = 'Sorry, <strong>file already exists</strong>';
+            }
 
-    //         // Check if file already exists
-    //         if (file_exists($target_file)) {
-    //             $_SESSION['errorMessages']['profile_img'] = 'Sorry, <strong>file already exists</strong>';
-    //         }
+            // Check file size
+            if ($_FILES["profile_img"]["size"] > 2000000) {
+                $_SESSION['errorMessages']['profile_img'] = 'Sorry, the maximum file size is <strong>2 MB</strong>';
+            }
 
-    //         // Check file size
-    //         if ($_FILES["profile_img"]["size"] > 2000000) {
-    //             $_SESSION['errorMessages']['profile_img'] = 'Sorry, the maximum file size is <strong>2 MB</strong>';
-    //         }
+            // Allow certain file formats
+            if (!in_array($imageFileType, ["jpg", "png", "jpeg", "gif"])) {
+                $_SESSION['errorMessages']['profile_img'] = 'Sorry, only <strong>JPG, JPEG, PNG & GIF</strong> files are allowed';
+            }
 
-    //         // Allow certain file formats
-    //         if (!in_array($imageFileType, ["jpg", "png", "jpeg", "gif"])) {
-    //             $_SESSION['errorMessages']['profile_img'] = 'Sorry, only <strong>JPG, JPEG, PNG & GIF</strong> files are allowed';
-    //         }
+            // finally move uploaded Image
+            if (empty($_SESSION['errorMessages']['profile_img'])) {
+                $check = move_uploaded_file($_FILES["profile_img"]["tmp_name"], $target_file);
+                $profile_img = $newName;
+            }
+        }
+    } else {
+        $_SESSION['errorMessages']['profile_img'] = 'Some data are missing <strong>Please Try Again</strong>';
+    }
 
-    //         // finally move uploaded Image
-    //         if (empty($_SESSION['errorMessages']['profile_img'])) {
-    //             $check = move_uploaded_file($_FILES["profile_img"]["tmp_name"], $target_file);
-    //             $_SESSION['data']['profile_img'] = $newName;
-    //         }
-    //     }
-    // } else {
-    //     $_SESSION['data']['profile_img'] = 'default_teacher.png	';
-    // }
+
 
     // check validation success and update teacher
     if (empty($_SESSION['errorMessages'])) {
-        $updateQuery = "UPDATE `teachers` SET `first_name`=?,`last_name`=?,`age`=?,`phone`=?,`email`=?,`profile_img`='default_teacher.png',`gender`= ?,`country_id`= ?,`city_id`= ? WHERE `id` = ?";
+        $updateQuery = "UPDATE `teachers` SET `first_name`=?,`last_name`=?,`age`=?,`phone`=?,`email`=?,`profile_img`= ?,`gender`= ?,`country_id`= ?,`city_id`= ? WHERE `id` = ?";
         $stmt = mysqli_prepare($con, $updateQuery);
-        mysqli_stmt_bind_param($stmt, "ssissiiii", $first_name, $last_name, $age, $phone, $email, $gender, $country_id, $city_id, $id);
+        mysqli_stmt_bind_param($stmt, "ssisssiiii", $first_name, $last_name, $age, $phone, $email, $profile_img, $gender, $country_id, $city_id, $id);
         mysqli_stmt_execute($stmt);
-        // print_r($stmt);
 
+        $_SESSION['successMessages'] = 'Profile Edited successfully';
+
+        // if editing logged in user --> update session data
+        if ($id == $_SESSION['user']['id']) {
+            $_SESSION['user']['id']           =   $id;
+            $_SESSION['user']['first_name']   =   $first_name;
+            $_SESSION['user']['last_name']    =   $last_name;
+            $_SESSION['user']['email']        =   $email;
+            $_SESSION['user']['profile_img']  =   $profile_img;
+        }
         // clear session data and error messages
         if (isset($_SESSION['errorMessages'])) {
             unset($_SESSION['errorMessages']);
@@ -285,34 +297,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_SESSION['oldData'])) {
             unset($_SESSION['oldData']);
         }
+
+        // redirect to home page
+        header("Location: /nti/first_project/teacher/all.php");
+        exit();
     }
-    // if (empty($_SESSION['errorMessages'])) {
-    //     $insertQuery = "INSERT INTO `teachers`(`first_name`, `last_name`, `age`, `phone`, `email`, `password`, `gender`, `country_id`, `city_id`, `profile_img`) VALUES (?,?,?,?,?,?,?,?,?,?)";
-    //     $stmt = mysqli_prepare($con, $insertQuery);
-    //     mysqli_stmt_bind_param($stmt, "ssisssiiis", $_SESSION['data']['first_name'], $_SESSION['data']['last_name'], $_SESSION['data']['age'], $_SESSION['data']['phone'], $_SESSION['data']['email'], $_SESSION['data']['password'], $_SESSION['data']['gender'], $_SESSION['data']['country_id'], $_SESSION['data']['city_id'], $_SESSION['data']['profile_img']);
-    //     mysqli_stmt_execute($stmt);
-
-    //     // check insert success
-    //     if ($stmt) {
-
-    //         $_SESSION['successMessages'] = 'New Teacher Added successfully';
-
-    //         // clear session data and error messages
-    //         if (isset($_SESSION['errorMessages'])) {
-    //             unset($_SESSION['errorMessages']);
-    //         }
-    //         if (isset($_SESSION['oldData'])) {
-    //             unset($_SESSION['oldData']);
-    //         }
-    //         if (isset($_SESSION['data'])) {
-    //             unset($_SESSION['data']);
-    //         }
-
-    //         // redirect to home page
-    //         header("Location: /nti/first_project/teacher/all.php");
-    //         exit();
-    //     }
-    // }
 }
 
 ?>
@@ -431,6 +420,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                         <!-- Profile Image -->
                                         <div class="col-md-4 form-group text-center">
+                                            <input type="hidden" name="old_img" value="<?= isset($_SESSION['oldData']['old_img']) ? $_SESSION['oldData']['old_img'] : (isset($teacher['profile_img']) ? $teacher['profile_img'] : "default_teacher.png") ?>">
                                             <label for="profileImg" class="font-weight-bold">Profile Image</label>
                                             <div class="input-group">
                                                 <div class="custom-file text-primary">
@@ -448,21 +438,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <!-- Old Password -->
                                                 <div class="col-md-4 form-group text-center">
                                                     <label for="oldPassword" class="text-white font-weight-bold">Old Password</label>
-                                                    <input type="password" id="oldPassword" class="form-control" placeholder="Enter Your Password" name="old_password">
+                                                    <input type="password" id="oldPassword" class="form-control" placeholder="Enter Your Password" name="old_password" autocomplete="off">
                                                     <?= (isset($_SESSION['errorMessages']['old_password'])) ? "<div class='badge border-danger danger badge-border bg-white px-1 mt-1 mw-100'>" . $_SESSION['errorMessages']['old_password'] . "</div>" : ''; ?>
                                                 </div>
 
                                                 <!-- New Password -->
                                                 <div class="col-md-4 form-group text-center">
                                                     <label for="newPassword" class="text-white font-weight-bold">New Password</label>
-                                                    <input type="password" id="newPassword" class="form-control" placeholder="Enter Your Password" name="new_password">
+                                                    <input type="password" id="newPassword" class="form-control" placeholder="Enter Your Password" name="new_password" autocomplete="off">
                                                     <?= (isset($_SESSION['errorMessages']['new_password'])) ? "<div class='badge border-danger danger badge-border bg-white px-1 mt-1 mw-100 '>" . $_SESSION['errorMessages']['new_password'] . "</div>" : ''; ?>
                                                 </div>
 
                                                 <!-- Password Confirmation -->
                                                 <div class="col-md-4 form-group text-center">
                                                     <label for="passwordConfirmation" class="text-white font-weight-bold">Password Confirmation</label>
-                                                    <input type="password" id="passwordConfirmation" class="form-control" placeholder="Enter Your Password Again" name="new_password_confirmation">
+                                                    <input type="password" id="passwordConfirmation" class="form-control" placeholder="Enter Your Password Again" name="new_password_confirmation" autocomplete="off">
                                                     <?= (isset($_SESSION['errorMessages']['new_password_confirmation'])) ? "<div class='badge border-danger danger badge-border bg-white px-1 mt-1 mw-100'>" . $_SESSION['errorMessages']['new_password_confirmation'] . "</div>" : ''; ?>
                                                 </div>
                                             </div>

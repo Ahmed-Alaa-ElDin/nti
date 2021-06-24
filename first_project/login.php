@@ -79,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     $_SESSION['successMessages'] = 'You Logged in successfully';
 
+                    $_SESSION['user']['id']            =    $data['id'];
                     $_SESSION['user']['first_name']    =    $data['first_name'];
                     $_SESSION['user']['last_name']     =    $data['last_name'];
                     $_SESSION['user']['email']         =    $data['email'];
@@ -140,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true" data-img="theme-assets/images/backgrounds/02.jpg">
         <div class="navbar-header">
             <ul class="nav navbar-nav flex-row">
-                <li class="nav-item m-auto text-center"><a class="navbar-brand" href="home.html"><img class="brand-logo" alt="Chameleon admin logo" src="theme-assets/images/logo/logo.png" />
+                <li class="nav-item m-auto text-center"><a class="navbar-brand" href="/nti/first_project/"><img class="brand-logo" alt="Chameleon admin logo" src="theme-assets/images/logo/logo.png" />
                         <h3 class="brand-text">Courses<span class="text-danger">4</span><span class="text-primary">U</span></h3>
                     </a></li>
                 <li class="nav-item d-md-none"><a class="nav-link close-navbar"><i class="ft-x"></i></a></li>
