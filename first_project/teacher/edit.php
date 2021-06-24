@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Validate Password
     if (isset($_POST['old_password']) && !empty($_POST['old_password'])) {
         $oldPassword = sha1(clean($_POST['old_password']));
-        
+
         // compare old password from database
         $compreQuery = "SELECT `first_name` FROM `teachers` WHERE `id` = $id AND `password` = '$oldPassword'";
         $result = mysqli_query($con, $compreQuery);
@@ -277,6 +277,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_bind_param($stmt, "ssissiiii", $first_name, $last_name, $age, $phone, $email, $gender, $country_id, $city_id, $id);
         mysqli_stmt_execute($stmt);
         // print_r($stmt);
+
+        // clear session data and error messages
+        if (isset($_SESSION['errorMessages'])) {
+            unset($_SESSION['errorMessages']);
+        }
+        if (isset($_SESSION['oldData'])) {
+            unset($_SESSION['oldData']);
+        }
     }
     // if (empty($_SESSION['errorMessages'])) {
     //     $insertQuery = "INSERT INTO `teachers`(`first_name`, `last_name`, `age`, `phone`, `email`, `password`, `gender`, `country_id`, `city_id`, `profile_img`) VALUES (?,?,?,?,?,?,?,?,?,?)";
