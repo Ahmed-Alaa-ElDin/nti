@@ -1,6 +1,8 @@
 <?php
 // prerequisite variables
-$title = 'Courses4U - Edit Teacher Profile';
+$addStudent = true;
+
+$title = 'Courses4U - Add New Student';
 
 $style =
     '.badge {
@@ -25,49 +27,17 @@ function clean($request)
 $countriesQuery = 'SELECT * FROM `countries`';
 $countriesResults = mysqli_query($con, $countriesQuery);
 
-
-// --------------------------------------------------------------------------------------------------------------------------------
-// get teacher data for editing
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-
-    // get teacher data
-    $query = "SELECT * FROM `teachers` WHERE `id` = $id";
-    $result = mysqli_query($con, $query);
-
-    // check teacher presence
-    if (!$result || mysqli_num_rows($result)) {
-        $teacher = mysqli_fetch_assoc($result);
-    } else {
-        $_SESSION['errorMessage']['teacherNotFound'] = 'This teacher isn\'t there';
-        header('location: all.php');
-        exit();
-    };
-}
-
-// --------------------------------------------------------------------------------------------------------------------------------
-// if submission occurred by post request
 // Validate inputs
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // Validate First Name
-    if (isset($_POST['id'])) {
-        $id = clean($_POST['id']);
-        if (empty($id)) {
-            $_SESSION['errorMessages']['id'] = 'Please send a <strong> valid ID</strong>';
-        } else {
-            $_SESSION['oldData']['id'] = $id;
-        }
-    } else {
-        $_SESSION['errorMessages']['id'] = 'Please send a <strong> valid ID</strong>';
-    }
-
+    $first_name = $last_name = $age = $phone = $email =  $gender = $country_id = $city_id = null;
+    $password = sha1('Abc@1234');
 
     // Validate First Name
     if (isset($_POST['first_name'])) {
         $first_name = clean($_POST['first_name']);
         if (empty($first_name)) {
-            $_SESSION['errorMessages']['first_name'] = 'Please enter your <strong>First Name</strong>';
+            $_SESSION['errorMessages']['first_name'] = 'Please enter the <strong>First Name</strong>';
         } elseif (strlen($first_name) > 50) {
             $_SESSION['errorMessages']['first_name'] = 'the maximum length of First Name is <strong>50 Characters</strong>';
             $_SESSION['oldData']['first_name'] = $first_name;
@@ -75,13 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['oldData']['first_name'] = $first_name;
         }
     } else {
-        $_SESSION['errorMessages']['first_name'] = 'Please enter your <strong>First Name</strong>';
+        $_SESSION['errorMessages']['first_name'] = 'Please enter the <strong>First Name</strong>';
     }
 
     // Validate Last Name
     if (isset($_POST['last_name'])) {
         $last_name = clean($_POST['last_name']);
         if (empty($last_name)) {
+            $last_name = Null;
             $_SESSION['oldData']['last_name'] = null;
         } elseif (strlen($last_name) > 50) {
             $_SESSION['errorMessages']['last_name'] = 'the maximum length of Last Name is <strong>50 Characters</strong>';
@@ -95,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['email'])) {
         $email = clean($_POST['email']);
         if (empty($email)) {
-            $_SESSION['errorMessages']['email'] = 'Please enter your <strong>E-mail</strong>';
+            $_SESSION['errorMessages']['email'] = 'Please enter the <strong>E-mail</strong>';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $_SESSION['errorMessages']['email'] = 'This input must contain <strong>Valid E-mail</strong>';
             $_SESSION['oldData']['email'] = $email;
@@ -106,13 +77,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['oldData']['email'] = $email;
         }
     } else {
-        $_SESSION['errorMessages']['email'] = 'Please enter your <strong>E-mail</strong>';
+        $_SESSION['errorMessages']['email'] = 'Please enter the <strong>E-mail</strong>';
     }
 
     // Validate Phone
     if (isset($_POST['phone'])) {
         $phone = clean($_POST['phone']);
         if (empty($phone)) {
+            $phone = Null;
             $_SESSION['oldData']['phone'] = null;
         } elseif (strlen($phone) > 20) {
             $_SESSION['errorMessages']['phone'] = 'the maximum length of Phone Number is <strong>20 Number</strong>';
@@ -140,105 +112,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['gender'])) {
         $gender = clean($_POST['gender']);
         if (empty($gender)) {
-            $_SESSION['errorMessages']['gender'] = 'Please Choose your <strong>Gendera</strong>';
+            $_SESSION['errorMessages']['gender'] = 'Please Choose the <strong>Gendera</strong>';
         } elseif (!filter_var($gender, FILTER_VALIDATE_INT)) {
-            $_SESSION['errorMessages']['gender'] = 'Please Choose your <strong>Genderb</strong>';
+            $_SESSION['errorMessages']['gender'] = 'Please Choose the <strong>Genderb</strong>';
             $_SESSION['oldData']['gender'] = $gender;
         } elseif (!in_array($gender, [1, 2])) {
-            $_SESSION['errorMessages']['gender'] = 'Please Choose your <strong>Genderc</strong>';
+            $_SESSION['errorMessages']['gender'] = 'Please Choose the <strong>Genderc</strong>';
             $_SESSION['oldData']['gender'] = $gender;
         } else {
             $_SESSION['oldData']['gender'] = $gender;
         }
     } else {
-        $_SESSION['errorMessages']['gender'] = 'Please Choose your <strong>Gendera</strong>';
+        $_SESSION['errorMessages']['gender'] = 'Please Choose the <strong>Gendera</strong>';
     }
 
     // Validate Country
     if (isset($_POST['country_id'])) {
         $country_id = clean($_POST['country_id']);
         if (!filter_var($country_id, FILTER_VALIDATE_INT)) {
-            $_SESSION['errorMessages']['country_id'] = 'Please Choose your <strong>Country</strong>';
+            $_SESSION['errorMessages']['country_id'] = 'Please Choose the <strong>Country</strong>';
             $_SESSION['oldData']['country_id'] = $country_id;
         } else {
             $_SESSION['oldData']['country_id'] = $country_id;
         }
     } else {
-        $_SESSION['errorMessages']['country_id'] = 'Please Choose your <strong>Country</strong>';
+        $_SESSION['errorMessages']['country_id'] = 'Please Choose the <strong>Country</strong>';
     }
 
     // Validate City
     if (isset($_POST['city_id'])) {
         $city_id = clean($_POST['city_id']);
         if (empty($city_id)) {
-            $city_id = null;
+            $city_id = Null;
             $_SESSION['oldData']['city_id'] = null;
         } elseif (!filter_var($city_id, FILTER_VALIDATE_INT)) {
-            $_SESSION['errorMessages']['city_id'] = 'Please Choose your <strong>City</strong>';
+            $_SESSION['errorMessages']['city_id'] = 'Please Choose the <strong>City</strong>';
             $_SESSION['oldData']['city_id'] = $city_id;
         } else {
             $_SESSION['oldData']['city_id'] = $city_id;
         }
     }
 
-    // Validate Password
-    if (isset($_POST['old_password']) && !empty($_POST['old_password'])) {
-        $oldPassword = sha1(clean($_POST['old_password']));
-
-        // compare old password from database
-        $compreQuery = "SELECT * FROM `teachers` WHERE `id` = $id AND `password` = '$oldPassword'";
-        $result = mysqli_query($con, $compreQuery);
-
-        if (mysqli_affected_rows($con)) {
-
-            // if the same of the old password from database validate new password
-            if (isset($_POST['new_password']) && !empty($_POST['new_password'])) {
-
-                $new_password = clean($_POST['new_password']);
-
-                if (strlen($new_password) < 8) {
-                    $_SESSION['errorMessages']['new_password'] = 'the length of Password must be <strong>8 Characters at least</strong>';
-                } elseif (!filter_var($new_password, FILTER_VALIDATE_REGEXP, [
-                    'options' => ['regexp' => '^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$^']
-                ])) {
-                    $_SESSION['errorMessages']['new_password'] = 'Your new_password must contain at least <strong> 8 characters</strong>, <strong>1 UPPERCASE letter</strong>, <strong>1 lowercase letter</strong>, <strong>1 number</strong> &amp; <strong>1 speci@l ch@r@cter</strong>';
-                } else {
-                    $new_password = sha1($new_password);
-
-                    // Validate Password Confirmation
-                    if (isset($_POST['new_password_confirmation'])) {
-                        $new_password_confirmation = clean($_POST['new_password_confirmation']);
-                        if (empty($new_password_confirmation)) {
-                            $_SESSION['errorMessages']['new_password_confirmation'] = 'Please enter the <strong>Password Again</strong>';
-                        } elseif (sha1($new_password_confirmation) !== $new_password) {
-                            $_SESSION['errorMessages']['new_password_confirmation'] = 'the two passwords <strong>Didn\'t Match</strong>';
-                        } else {
-                            $password = $new_password;
-
-                            // update password
-                            $updateQuery = "UPDATE `teachers` SET `password`= ? WHERE `id` = ?";
-                            $stmt = mysqli_prepare($con, $updateQuery);
-                            mysqli_stmt_bind_param($stmt, "si", $password, $id);
-                            mysqli_stmt_execute($stmt);
-                        }
-                    } else {
-                        $_SESSION['errorMessages']['new_password_confirmation'] = 'Please enter the <strong>Password Again</strong>';
-                    }
-                }
-            }
-        } else {
-            $_SESSION['errorMessages']['old_password'] = 'Wrong password, Please enter the <strong>Old Password Again</strong>';
-        }
-    }
-
-    if (isset($_POST["old_img"])) {
-        $_SESSION['oldData']['old_img'] = $_POST["old_img"];
+    if (isset($_FILES["profile_img"])) {
 
         // Check if image file is a actual image or fake image
         if (empty($_FILES["profile_img"]["tmp_name"]) || !getimagesize($_FILES["profile_img"]["tmp_name"])) {
-            $profile_img = $_POST["old_img"];
-            $_SESSION['data']['profile_img'] = 'default_teacher.png';
-            // return false;
+            $profile_img = 'default_student.png	';
         } else {
             $target_dir = dirname(__DIR__) . "/uploads/";
             $fileName = basename($_FILES["profile_img"]["name"]);
@@ -268,39 +187,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     } else {
-        $_SESSION['errorMessages']['profile_img'] = 'Some data are missing <strong>Please Try Again</strong>';
+        $profile_img = 'default_student.png	';
     }
 
-
-
-    // check validation success and update teacher
+    // check validation success and insert user
     if (empty($_SESSION['errorMessages'])) {
-        $updateQuery = "UPDATE `teachers` SET `first_name`=?,`last_name`=?,`age`=?,`phone`=?,`email`=?,`profile_img`= ?,`gender`= ?,`country_id`= ?,`city_id`= ? WHERE `id` = ?";
-        $stmt = mysqli_prepare($con, $updateQuery);
-        mysqli_stmt_bind_param($stmt, "ssisssiiii", $first_name, $last_name, $age, $phone, $email, $profile_img, $gender, $country_id, $city_id, $id);
+        $insertQuery = "INSERT INTO `students`(`first_name`, `last_name`, `age`, `phone`, `email`, `password`, `gender`, `country_id`, `city_id`, `profile_img`) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $stmt = mysqli_prepare($con, $insertQuery);
+        mysqli_stmt_bind_param($stmt, "ssisssiiis", $first_name, $last_name, $age, $phone, $email, $password, $gender, $country_id, $city_id, $profile_img);
         mysqli_stmt_execute($stmt);
 
-        $_SESSION['successMessages'] = 'Profile Edited successfully';
+        // check insert success
+        if ($stmt) {
 
-        // if editing logged in user --> update session data
-        if ($id == $_SESSION['user']['id']) {
-            $_SESSION['user']['id']           =   $id;
-            $_SESSION['user']['first_name']   =   $first_name;
-            $_SESSION['user']['last_name']    =   $last_name;
-            $_SESSION['user']['email']        =   $email;
-            $_SESSION['user']['profile_img']  =   $profile_img;
-        }
-        // clear session data and error messages
-        if (isset($_SESSION['errorMessages'])) {
-            unset($_SESSION['errorMessages']);
-        }
-        if (isset($_SESSION['oldData'])) {
-            unset($_SESSION['oldData']);
-        }
+            $_SESSION['successMessages'] = 'New Student Added successfully';
 
-        // redirect to home page
-        header("Location: /nti/first_project/teacher/all.php");
-        exit();
+            // clear session data and error messages
+            if (isset($_SESSION['errorMessages'])) {
+                unset($_SESSION['errorMessages']);
+            }
+            if (isset($_SESSION['oldData'])) {
+                unset($_SESSION['oldData']);
+            }
+            if (isset($_SESSION['data'])) {
+                unset($_SESSION['data']);
+            }
+
+            // redirect to home page
+            header("Location: /nti/first_project/student/all.php");
+            exit();
+        }
     }
 }
 
@@ -326,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="content-wrapper-before"></div>
             <div class="content-header row">
                 <div class="col-12 text-center my-2">
-                    <h2 class="text-white font-weight-bold">Edit Teacher Profile</h2>
+                    <h2 class="text-white font-weight-bold">Add New Student</h2>
                 </div>
             </div>
             <div class="content-body">
@@ -341,40 +257,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="form-body">
                                     <div class="row">
 
-                                        <input type="hidden" name="id" value="<?= isset($_GET['id']) ? $_GET['id'] : (isset($_SESSION['oldData']['id']) ? $_SESSION['oldData']['id'] : "") ?>">
-
                                         <!-- First Name -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="fisrtName" class="font-weight-bold">First Name</label>
-                                            <input type="text" id="fisrtName" class="form-control" placeholder="Enter Your First Name" name="first_name" value="<?= isset($_SESSION['oldData']['first_name']) ? $_SESSION['oldData']['first_name'] : (isset($teacher['first_name']) ? $teacher['first_name'] : "") ?>">
+                                            <input type="text" id="fisrtName" class="form-control" placeholder="Enter First Name" name="first_name" value=<?= isset($_SESSION['oldData']['first_name']) ? '"' .  $_SESSION['oldData']['first_name'] . '"' : "" ?>>
                                             <?= (isset($_SESSION['errorMessages']['first_name'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['first_name'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- Last Name -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="lastName" class="font-weight-bold">Last Name</label>
-                                            <input type="text" id="lastName" class="form-control" placeholder="Enter Your Last Name" name="last_name" value="<?= isset($_SESSION['oldData']['last_name']) ? $_SESSION['oldData']['last_name'] : (isset($teacher['last_name']) ? $teacher['last_name'] : "") ?>">
+                                            <input type="text" id="lastName" class="form-control" placeholder="Enter Last Name" name="last_name" value=<?= isset($_SESSION['oldData']['last_name']) ? '"' .  $_SESSION['oldData']['last_name'] . '"' : "" ?>>
                                             <?= (isset($_SESSION['errorMessages']['last_name'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['last_name'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- E-mail -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="email" class="font-weight-bold">E-mail</label>
-                                            <input type="text" id="email" class="form-control" placeholder="Enter Your E-mail" name="email" value="<?= isset($_SESSION['oldData']['email']) ? $_SESSION['oldData']['email'] : (isset($teacher['email']) ? $teacher['email'] : "") ?>">
+                                            <input type="text" id="email" class="form-control" placeholder="Enter E-mail" name="email" value=<?= isset($_SESSION['oldData']['email']) ? '"' .  $_SESSION['oldData']['email'] . '"' : "" ?>>
                                             <?= (isset($_SESSION['errorMessages']['email'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['email'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- Contact Namber -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="contactNumber" class="font-weight-bold">Contact Number</label>
-                                            <input type="text" id="contactNumber" class="form-control" placeholder="Enter Your Contact Number" name="phone" value="<?= isset($_SESSION['oldData']['phone']) ? $_SESSION['oldData']['phone'] : (isset($teacher['phone']) ? $teacher['phone'] : "") ?>">
+                                            <input type="text" id="contactNumber" class="form-control" placeholder="Enter Contact Number" name="phone" value=<?= isset($_SESSION['oldData']['phone']) ? '"' .  $_SESSION['oldData']['phone'] . '"' : "" ?>>
                                             <?= (isset($_SESSION['errorMessages']['phone'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['phone'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- Age -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="age" class="font-weight-bold">Age</label>
-                                            <input type="number" min='0' max='100' id="age" class="form-control" placeholder="Enter Your Age" name="age" value="<?= isset($_SESSION['oldData']['age']) ? $_SESSION['oldData']['age'] : (isset($teacher['age']) ? $teacher['age'] : "") ?>">
+                                            <input type="number" min='0' max='100' id="age" class="form-control" placeholder="Enter Age" name="age" value=<?= isset($_SESSION['oldData']['age']) ? '"' .  $_SESSION['oldData']['age'] . '"' : "" ?>>
                                             <?= (isset($_SESSION['errorMessages']['age'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['age'] . "</div>" : ''; ?>
                                         </div>
 
@@ -382,9 +296,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <div class="col-md-4 form-group text-center">
                                             <label for="gender" class="font-weight-bold">Gender</label>
                                             <select class="form-control" name="gender" id="gender">
-                                                <option class="text-muted" value="">Choose Your Gender</option>
-                                                <option value="1" <?= isset($_SESSION['oldData']['gender']) && $_SESSION['oldData']['gender'] == '1' ? 'selected' : (isset($teacher['gender']) && $teacher['gender'] == '1' ? 'selected' : "") ?>>Male</option>
-                                                <option value="2" <?= isset($_SESSION['oldData']['gender']) && $_SESSION['oldData']['gender'] == '2' ? 'selected' : (isset($teacher['gender']) && $teacher['gender'] == '2' ? 'selected' : "") ?>>Female</option>
+                                                <option class="text-muted" value="">Choose Gender</option>
+                                                <option value="1" <?= isset($_SESSION['oldData']['gender']) && $_SESSION['oldData']['gender'] == '1' ? 'selected' : '' ?>>Male</option>
+                                                <option value="2" <?= isset($_SESSION['oldData']['gender']) && $_SESSION['oldData']['gender'] == '2' ? 'selected' : '' ?>>Female</option>
                                             </select>
                                             <?= (isset($_SESSION['errorMessages']['gender'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['gender'] . "</div>" : ''; ?>
                                         </div>
@@ -393,12 +307,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <div class="col-md-4 form-group text-center">
                                             <label for="country" class="font-weight-bold">Country</label>
                                             <select class="form-control" name="country_id" id="country">
-                                                <option class="text-muted" value="">Choose Your Country</option>
+                                                <option class="text-muted" value="">Choose Country</option>
                                                 <?php
                                                 while ($country = mysqli_fetch_array($countriesResults)) {
                                                     if (isset($_SESSION['oldData']['country_id']) && $_SESSION['oldData']['country_id'] == $country['id']) {
-                                                        echo "<option value='$country[id]' selected>$country[name]</option>";
-                                                    } elseif (isset($teacher['country_id']) && $teacher['country_id'] == $country['id']) {
                                                         echo "<option value='$country[id]' selected>$country[name]</option>";
                                                     } else {
                                                         echo "<option value='$country[id]'>$country[name]</option>";
@@ -413,14 +325,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <div class="col-md-4 form-group text-center">
                                             <label for="city" class="font-weight-bold">City</label>
                                             <select class="form-control" name="city_id" id="city">
-                                                <option class="text-muted" value="">Choose Your City</option>
+                                                <option class="text-muted" value="">Choose City</option>
                                             </select>
                                             <?= (isset($_SESSION['errorMessages']['city_id'])) ? "<div class='badge badge-danger mt-1 mw-100'>" . $_SESSION['errorMessages']['city_id'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- Profile Image -->
                                         <div class="col-md-4 form-group text-center">
-                                            <input type="hidden" name="old_img" value="<?= isset($_SESSION['oldData']['old_img']) ? $_SESSION['oldData']['old_img'] : (isset($teacher['profile_img']) ? $teacher['profile_img'] : "default_teacher.png") ?>">
                                             <label for="profileImg" class="font-weight-bold">Profile Image</label>
                                             <div class="input-group">
                                                 <div class="custom-file text-primary">
@@ -428,34 +339,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     <label class="custom-file-label text-left" for="profileImgInput">Choose file</label>
                                                 </div>
                                             </div>
-                                            <div class='badge badge-warning mt-1 mw-100 text-dark font-weight-bold'>If you left it empty, the old image will be kept as it is</div>
                                             <?= (isset($_SESSION['errorMessages']['profile_img'])) ? "<div class='badge badge-danger mt-1 mw-100'>" . $_SESSION['errorMessages']['profile_img'] . "</div>" : ''; ?>
                                         </div>
 
-                                        <div class="col-md-12 bg-danger px-2 pt-1 rounded text-center">
-                                            <div class='badge badge-dark mb-1 px-1 mw-100 text-center font-weight-bold'>If you left it empty, the old password will be kept as it is</div>
-                                            <div class="row">
-                                                <!-- Old Password -->
-                                                <div class="col-md-4 form-group text-center">
-                                                    <label for="oldPassword" class="text-white font-weight-bold">Old Password</label>
-                                                    <input type="password" id="oldPassword" class="form-control" placeholder="Enter Your Old Password" name="old_password" autocomplete="off">
-                                                    <?= (isset($_SESSION['errorMessages']['old_password'])) ? "<div class='badge border-danger danger badge-border bg-white px-1 mt-1 mw-100'>" . $_SESSION['errorMessages']['old_password'] . "</div>" : ''; ?>
-                                                </div>
-
-                                                <!-- New Password -->
-                                                <div class="col-md-4 form-group text-center">
-                                                    <label for="newPassword" class="text-white font-weight-bold">New Password</label>
-                                                    <input type="password" id="newPassword" class="form-control" placeholder="Enter Your New Password" name="new_password" autocomplete="off">
-                                                    <?= (isset($_SESSION['errorMessages']['new_password'])) ? "<div class='badge border-danger danger badge-border bg-white px-1 mt-1 mw-100 '>" . $_SESSION['errorMessages']['new_password'] . "</div>" : ''; ?>
-                                                </div>
-
-                                                <!-- Password Confirmation -->
-                                                <div class="col-md-4 form-group text-center">
-                                                    <label for="passwordConfirmation" class="text-white font-weight-bold">Password Confirmation</label>
-                                                    <input type="password" id="passwordConfirmation" class="form-control" placeholder="Enter Your New Password Again" name="new_password_confirmation" autocomplete="off">
-                                                    <?= (isset($_SESSION['errorMessages']['new_password_confirmation'])) ? "<div class='badge border-danger danger badge-border bg-white px-1 mt-1 mw-100'>" . $_SESSION['errorMessages']['new_password_confirmation'] . "</div>" : ''; ?>
-                                                </div>
-                                            </div>
+                                        <!-- Passwort default warning -->
+                                        <div class="col-md-12 text-center">
+                                            <div class='badge badge-warning text-dark px-1 mt-1 mw-100'> The default Password is <span class="font-weight-bold">'Abc@1234'</span> </div>
                                         </div>
 
                                     </div>
@@ -511,11 +400,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 })
             }
 
-            console.log($('#country').val());
-
             // Get cities on bage load
             if ($('#country').val()) {
-                getCities($('#country').val(), <?= isset($_SESSION['oldData']['city_id']) ? $_SESSION['oldData']['city_id'] : (isset($teacher['city_id']) ? $teacher['city_id'] : null) ?>);
+                getCities($('#country').val(), <?= isset($_SESSION['oldData']['city_id']) ? $_SESSION['oldData']['city_id'] : null ?>);
             }
             $('#country').on('change', function() {
                 getCities($(this).val());

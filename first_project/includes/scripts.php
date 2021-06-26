@@ -4,7 +4,9 @@
     <!-- BEGIN PAGE VENDOR JS-->
     <script src="/nti/first_project/theme-assets/vendors/js/charts/chartist.min.js" type="text/javascript"></script>
     <script src="/nti/first_project/theme-assets/vendors/js/extensions/toastr.min.js" type="text/javascript"></script>
-    <script src="/nti/first_project/theme-assets//vendors/js/tables/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="/nti/first_project/theme-assets/vendors/js/tables/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="/nti/first_project/theme-assets/vendors/js/extensions/jquery.raty.js" type="text/javascript"></script>
+    <script src="/nti/first_project/theme-assets/vendors/js/editors/tinymce/tinymce.min.js" type="text/javascript"></script>
     <!-- END PAGE VENDOR JS-->
     <!-- BEGIN CHAMELEON  JS-->
     <script src="/nti/first_project/theme-assets/js/core/app-menu-lite.js" type="text/javascript"></script>

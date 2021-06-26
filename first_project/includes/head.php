@@ -19,6 +19,7 @@
         
         if (isset($style)) {
             echo '<style>' . $style . '</style>';
+            
         }
         ?>
     </head>

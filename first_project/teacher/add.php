@@ -6,13 +6,24 @@ $title = 'Courses4U - Add New Teacher';
 
 $style =
 '.badge {
-            white-space: unset;
-            line-height: unset;
-        }';
-        
-        include(dirname(__DIR__) . '/includes/head.php');
-        include(dirname(__DIR__) . '/permission/isTeacher.php');
-        
+    white-space: unset;
+    line-height: unset;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}';
+
+
+include(dirname(__DIR__) . '/includes/head.php');
+include(dirname(__DIR__) . '/permission/isTeacher.php');
+
 // Declaration of cleaning function
 function clean($request)
 {
@@ -36,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['first_name'])) {
         $first_name = clean($_POST['first_name']);
         if (empty($first_name)) {
-            $_SESSION['errorMessages']['first_name'] = 'Please enter your <strong>First Name</strong>';
+            $_SESSION['errorMessages']['first_name'] = 'Please enter the <strong>First Name</strong>';
         } elseif (strlen($first_name) > 50) {
             $_SESSION['errorMessages']['first_name'] = 'the maximum length of First Name is <strong>50 Characters</strong>';
             $_SESSION['oldData']['first_name'] = $first_name;
@@ -45,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['oldData']['first_name'] = $first_name;
         }
     } else {
-        $_SESSION['errorMessages']['first_name'] = 'Please enter your <strong>First Name</strong>';
+        $_SESSION['errorMessages']['first_name'] = 'Please enter the <strong>First Name</strong>';
     }
 
     // Validate Last Name
@@ -67,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['email'])) {
         $email = clean($_POST['email']);
         if (empty($email)) {
-            $_SESSION['errorMessages']['email'] = 'Please enter your <strong>E-mail</strong>';
+            $_SESSION['errorMessages']['email'] = 'Please enter the <strong>E-mail</strong>';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $_SESSION['errorMessages']['email'] = 'This input must contain <strong>Valid E-mail</strong>';
             $_SESSION['oldData']['email'] = $email;
@@ -79,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['oldData']['email'] = $email;
         }
     } else {
-        $_SESSION['errorMessages']['email'] = 'Please enter your <strong>E-mail</strong>';
+        $_SESSION['errorMessages']['email'] = 'Please enter the <strong>E-mail</strong>';
     }
 
     // Validate Phone
@@ -116,19 +127,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['gender'])) {
         $gender = clean($_POST['gender']);
         if (empty($gender)) {
-            $_SESSION['errorMessages']['gender'] = 'Please Choose your <strong>Gendera</strong>';
+            $_SESSION['errorMessages']['gender'] = 'Please Choose the <strong>Gendera</strong>';
         } elseif (!filter_var($gender, FILTER_VALIDATE_INT)) {
-            $_SESSION['errorMessages']['gender'] = 'Please Choose your <strong>Genderb</strong>';
+            $_SESSION['errorMessages']['gender'] = 'Please Choose the <strong>Genderb</strong>';
             $_SESSION['oldData']['gender'] = $gender;
         } elseif (!in_array($gender, [1, 2])) {
-            $_SESSION['errorMessages']['gender'] = 'Please Choose your <strong>Genderc</strong>';
+            $_SESSION['errorMessages']['gender'] = 'Please Choose the <strong>Genderc</strong>';
             $_SESSION['oldData']['gender'] = $gender;
         } else {
             $_SESSION['data']['gender'] = $gender;
             $_SESSION['oldData']['gender'] = $gender;
         }
     } else {
-        $_SESSION['errorMessages']['gender'] = 'Please Choose your <strong>Gendera</strong>';
+        $_SESSION['errorMessages']['gender'] = 'Please Choose the <strong>Gendera</strong>';
     }
 
     // Validate Password
@@ -167,14 +178,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['country_id'])) {
         $country_id = clean($_POST['country_id']);
         if (!filter_var($country_id, FILTER_VALIDATE_INT)) {
-            $_SESSION['errorMessages']['country_id'] = 'Please Choose your <strong>Country</strong>';
+            $_SESSION['errorMessages']['country_id'] = 'Please Choose the <strong>Country</strong>';
             $_SESSION['oldData']['country_id'] = $country_id;
         } else {
             $_SESSION['data']['country_id'] = $country_id;
             $_SESSION['oldData']['country_id'] = $country_id;
         }
     } else {
-        $_SESSION['errorMessages']['country_id'] = 'Please Choose your <strong>Country</strong>';
+        $_SESSION['errorMessages']['country_id'] = 'Please Choose the <strong>Country</strong>';
     }
 
     // Validate City
@@ -184,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['data']['city_id'] = Null;
             $_SESSION['oldData']['city_id'] = null;
         } elseif (!filter_var($city_id, FILTER_VALIDATE_INT)) {
-            $_SESSION['errorMessages']['city_id'] = 'Please Choose your <strong>City</strong>';
+            $_SESSION['errorMessages']['city_id'] = 'Please Choose the <strong>City</strong>';
             $_SESSION['oldData']['city_id'] = $city_id;
         } else {
             $_SESSION['data']['city_id'] = $city_id;

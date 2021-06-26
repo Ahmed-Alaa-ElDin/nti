@@ -1,6 +1,6 @@
 <?php
 // prerequisite variables
-$title = 'Courses4U - Delete Teacher';
+$title = 'Courses4U - Delete Student';
 
 include(dirname(__DIR__) . '/includes/head.php');
 include(dirname(__DIR__) . '/permission/isTeacher.php');
@@ -20,17 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])) {
     $id = $_GET['id'];
     
     // excute delete query
-    $deleteQuery = "DELETE FROM `teachers` WHERE `id` = $id";
+    $deleteQuery = "DELETE FROM `students` WHERE `id` = $id";
     $result = mysqli_query($con, $deleteQuery);
 
     if (mysqli_affected_rows($con)) {
-        $_SESSION['successMessages'] = 'Teacher Deleted successfully';
+        $_SESSION['successMessages'] = 'Student Deleted successfully';
 
-        // redirect to all teacher
-        header("Location: /nti/first_project/teacher/all.php");
+        // redirect to all student
+        header("Location: /nti/first_project/student/all.php");
         exit();
     } else {
-        $_SESSION['errorMessage']['teacherNotFound'] = 'This teacher isn\'t there';
+        $_SESSION['errorMessage']['studentNotFound'] = 'This student isn\'t there';
         header('location: all.php');
         exit();
     };

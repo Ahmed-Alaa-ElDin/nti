@@ -1,13 +1,12 @@
 <?php
-$allTeachers = true;
-$title = 'Courses4U - Teachers';
+$allReviews = true;
+$title = 'Courses4U - Reviews';
 include(dirname(__DIR__) . '/includes/head.php');
 
 include(dirname(__DIR__) . '/permission/isTeacher.php');
 
-// print_r($_SESSION['errorMessages']);
-// get all teachers
-$query = "SELECT `teachers`.*, `countries`.`name` As country_name, `cities`.`name` As city_name FROM `teachers` LEFT JOIN `countries` ON `teachers`.`country_id` = `countries`.`id` LEFT JOIN `cities` ON `teachers`.`city_id` = `cities`.`id`";
+// get all reviews
+$query = "SELECT `reviews`.*, `courses`.`name`, `students`.* FROM `reviews` LEFT JOIN `courses` ON `courses`.`id` = `reviews`.`course_id` LEFT JOIN `students` ON `students`.`id` = `reviews`.`student_id`";
 $results = mysqli_query($con, $query);
 ?>
 
@@ -31,7 +30,7 @@ $results = mysqli_query($con, $query);
             <div class="content-wrapper-before"></div>
             <div class="content-header row">
                 <div class="col-12 text-center my-2">
-                    <h2 class="text-white font-weight-bold">All Teachers</h2>
+                    <h2 class="text-white font-weight-bold">All Reviews</h2>
                 </div>
             </div>
             <div class="content-body">
@@ -42,35 +41,24 @@ $results = mysqli_query($con, $query);
                                 <table id="myTable" class="w-100 text-center table table-striped table-bordered">
                                     <thead class="">
                                         <tr>
-                                            <th class="align-middle">Name</th>
-                                            <th class="align-middle">Age</th>
-                                            <th class="align-middle">Phone</th>
-                                            <th class="align-middle">Mail</th>
-                                            <th class="align-middle">Gender</th>
-                                            <th class="align-middle">Address</th>
-                                            <th class="align-middle"># Courses</th>
+                                            <th class="align-middle">Course</th>
+                                            <th class="align-middle">Student</th>
+                                            <th class="align-middle">Rating</th>
+                                            <th class="align-middle">Feedback</th>
                                             <th class="align-middle">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php while ($teacher = mysqli_fetch_assoc($results)) { ?>
+                                        <?php while ($review = mysqli_fetch_assoc($results)) { ?>
                                             <tr>
-                                                <td class="align-middle text-left">
-                                                    <div style="min-width: max-content;">
-                                                        <?= $teacher['profile_img'] ? "<img src='/nti/first_project/uploads/$teacher[profile_img]' style='width:40px;height:40px' class='rounded-circle'>" : "<img src='/nti/first_project/uploads/default_teacher.png' style='width:40px;height:40px' class='rounded-circle'>" ?> &nbsp;
-                                                        <?= $teacher['first_name'] ?> <?= $teacher['last_name'] ?>
-                                                    </div>
-                                                </td>
-                                                <td class="align-middle"><?= $teacher['age'] ? $teacher['age'] : 'N/A' ?></td>
-                                                <td class="align-middle"><?= $teacher['phone'] ? $teacher['phone'] : 'N/A' ?></td>
-                                                <td class="align-middle"><?= $teacher['email'] ?></td>
-                                                <td class="align-middle"><?= $teacher['gender'] == 1 ? 'Male' : 'Female' ?></td>
-                                                <td class="align-middle"><?= $teacher['country_name'] ?> <?= $teacher['city_name'] ? '/ ' . $teacher['city_name'] : '' ?></td>
-                                                <td class="align-middle">0</td>
+                                                <td class="align-middle"><?= $review['name'] ?></td>
+                                                <td class="align-middle"><?= $review['first_name'] . " " . $review['last_name'] ?></td>
+                                                <td class="align-middle"><?= $review['rating'] ?></td>
+                                                <td class="align-middle"><?= htmlspecialchars_decode($review['review']) ?></td>
                                                 <td class="align-middle">
                                                     <div style="min-width: max-content;">
-                                                        <a href="/nti/first_project/teacher/edit.php?id=<?= $teacher['id'] ?>" class="btn btn-primary btn-sm text-white">Edit</a>
-                                                        <button type="button" class="btn btn-danger btn-sm text-white" data-toggle="modal" data-keyboard="false" data-target="#deleteTeacher" data-id="<?= $teacher['id'] ?>" data-name="<?= $teacher['first_name'] ?> <?= $teacher['last_name'] ?>">
+                                                        <a href="/nti/first_project/review/edit.php?id=<?= $review['id'] ?>" class="btn btn-primary btn-sm text-white">Edit</a>
+                                                        <button type="button" class="btn btn-danger btn-sm text-white" data-toggle="modal" data-keyboard="false" data-target="#deleteTeacher" data-id="<?= $review['id'] ?>" >
                                                             Delete
                                                         </button>
                                                     </div>
@@ -99,16 +87,14 @@ $results = mysqli_query($con, $query);
                     </button>
                 </div>
                 <div class="modal-body text-center">
-                    <div>Are you sure, you want to delete
-                        <span id="teacherName" class="font-weight-bold"></span>
+                    <div>Are you sure, you want to delete this review
+                        <span id="reviewName" class="font-weight-bold"></span>
                         .
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn grey btn-secondary" data-dismiss="modal">Close</button>
-                    <a href="/nti/first_project/teacher/delete.php?id=<?= $teacher['id'] ?>" id="deletingButton" class="btn btn-danger text-white">Delete</a>
-
-                    <!-- <button type="button" class="btn btn-danger">Save</button> -->
+                    <a href="/nti/first_project/review/delete.php?id=<?= $review['id'] ?>" id="deletingButton" class="btn btn-danger text-white">Delete</a>
                 </div>
             </div>
         </div>
@@ -133,10 +119,8 @@ $results = mysqli_query($con, $query);
         $('#deleteTeacher').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget)
             var id = button.data('id')
-            var name = button.data('name')
             var modal = $(this)
-            modal.find('#deletingButton').attr('href', '/nti/first_project/teacher/delete.php?id=' + id)
-            modal.find('#teacherName').text(name)
+            modal.find('#deletingButton').attr('href', '/nti/first_project/review/delete.php?id=' + id)
         })
 
         // Add Toastr
@@ -148,12 +132,12 @@ $results = mysqli_query($con, $query);
             unset($_SESSION['successMessages']);
         }
 
-        if (isset($_SESSION['errorMessage']['teacherNotFound'])) {
-            // print_r($_SESSION['errorMessage']['teacherNotFound']);
+        if (isset($_SESSION['errorMessage']['reviewNotFound'])) {
+            // print_r($_SESSION['errorMessage']['reviewNotFound']);
         ?>
-            toastr.error("<?= $_SESSION['errorMessage']['teacherNotFound'] ?>")
+            toastr.error("<?= $_SESSION['errorMessage']['reviewNotFound'] ?>")
         <?php
-            unset($_SESSION['errorMessage']['teacherNotFound']);
+            unset($_SESSION['errorMessage']['reviewNotFound']);
         }
         ?>
     </script>
