@@ -1,6 +1,6 @@
 <?php
 // prerequisite variables
-$title = 'Courses4U - Delete Country';
+$title = 'Courses4U - Delete Review';
 
 include(dirname(__DIR__) . '/includes/head.php');
 include(dirname(__DIR__) . '/permission/isTeacher.php');
@@ -20,17 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])) {
     $id = $_GET['id'];
     
     // excute delete query
-    $deleteQuery = "DELETE FROM `countries` WHERE `id` = $id";
+    $deleteQuery = "DELETE FROM `reviews` WHERE `id` = $id";
     $result = mysqli_query($con, $deleteQuery);
 
     if (mysqli_affected_rows($con)) {
-        $_SESSION['successMessages'] = 'Country Deleted successfully';
+        $_SESSION['successMessages'] = 'Review Deleted successfully';
 
-        // redirect to all countries
-        header("Location: /nti/first_project/country/all.php");
+        // redirect to all reviews
+        header("Location: all.php");
         exit();
     } else {
-        $_SESSION['errorMessage']['countryNotFound'] = 'This country isn\'t there';
+        $_SESSION['errorMessage']['reviewNotFound'] = 'This review isn\'t there';
         header('location: all.php');
         exit();
     };

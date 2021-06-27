@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validate Course
     if (isset($_POST['course_id'])) {
-        $course_id = filter_var(clean($_POST['course_id']),FILTER_SANITIZE_NUMBER_INT);
+        $course_id = filter_var(clean($_POST['course_id']), FILTER_SANITIZE_NUMBER_INT);
         if (!filter_var($course_id, FILTER_VALIDATE_INT)) {
             $_SESSION['errorMessages']['course_id'] = 'Please Choose the <strong>Course</strong>';
             $_SESSION['oldData']['course_id'] = $course_id;
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validate Student
     if (isset($_POST['student_id'])) {
-        $student_id = filter_var(clean($_POST['student_id']),FILTER_SANITIZE_NUMBER_INT);
+        $student_id = filter_var(clean($_POST['student_id']), FILTER_SANITIZE_NUMBER_INT);
         if (!filter_var($student_id, FILTER_VALIDATE_INT)) {
             $_SESSION['errorMessages']['student_id'] = 'Please Choose the <strong>Student</strong>';
             $_SESSION['oldData']['student_id'] = $student_id;
@@ -66,8 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validate Rating
     if (isset($_POST['rating'])) {
-        $rating = filter_var(clean($_POST['rating']),FILTER_SANITIZE_NUMBER_INT);
-        if (!filter_var($rating, FILTER_VALIDATE_INT)) {
+        // print_r(clean($_POST['rating']));
+        // exit();
+        $rating = clean($_POST['rating']);
+        if (!filter_var($rating, FILTER_VALIDATE_FLOAT)) {
             $_SESSION['errorMessages']['rating'] = 'Please Choose the <strong>Rating</strong>';
             $_SESSION['oldData']['rating'] = $rating;
         } else {
@@ -95,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($_SESSION['errorMessages'])) {
         $insertQuery = "INSERT INTO `reviews`(`course_id`, `student_id`, `rating`, `review`) VALUES (?,?,?,?)";
         $stmt = mysqli_prepare($con, $insertQuery);
-        mysqli_stmt_bind_param($stmt, "iiis", $course_id, $student_id, $rating, $review);
+        mysqli_stmt_bind_param($stmt, "iids", $course_id, $student_id, $rating, $review);
         mysqli_stmt_execute($stmt);
 
         // check insert success
@@ -197,7 +199,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <!-- Feedback -->
                                         <div class="col-md-12 form-group text-center">
                                             <label for="review" class="font-weight-bold">Feedback</label>
-                                            <textarea name="review" class="form-control" id="review"></textarea>
+                                            <textarea name="review" class="form-control" id="review">
+                                                <?= isset($_SESSION['oldData']['review']) ? $_SESSION['oldData']['review'] : '' ?>
+                                            </textarea>
                                             <?= (isset($_SESSION['errorMessages']['review'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['review'] . "</div>" : ''; ?>
                                         </div>
                                     </div>
@@ -234,6 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 ['gorgeous 1/2', 'gorgeous']
             ],
             scoreName: 'rating',
+            <?= isset($_SESSION['oldData']['rating']) ? "score: '" . $_SESSION['oldData']['rating'] . "' ," : '' ?>
         });
 
         // ading tinymce

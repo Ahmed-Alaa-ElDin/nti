@@ -254,7 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="content-wrapper-before"></div>
             <div class="content-header row">
                 <div class="col-12 text-center my-2">
-                    <h2 class="text-white font-weight-bold">Edit Teacher Profile</h2>
+                    <h2 class="text-white font-weight-bold">Edit Course</h2>
                 </div>
             </div>
             <div class="content-body">

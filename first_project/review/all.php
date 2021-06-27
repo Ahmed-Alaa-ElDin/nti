@@ -6,7 +6,9 @@ include(dirname(__DIR__) . '/includes/head.php');
 include(dirname(__DIR__) . '/permission/isTeacher.php');
 
 // get all reviews
-$query = "SELECT `reviews`.*, `courses`.`name`, `students`.* FROM `reviews` LEFT JOIN `courses` ON `courses`.`id` = `reviews`.`course_id` LEFT JOIN `students` ON `students`.`id` = `reviews`.`student_id`";
+$query = "SELECT `reviews`.*, `courses`.`name`, `students`.`first_name` , `students`.`last_name` FROM `reviews` 
+LEFT JOIN `courses` ON `courses`.`id` = `reviews`.`course_id` 
+LEFT JOIN `students` ON `students`.`id` = `reviews`.`student_id`";
 $results = mysqli_query($con, $query);
 ?>
 
@@ -133,7 +135,6 @@ $results = mysqli_query($con, $query);
         }
 
         if (isset($_SESSION['errorMessage']['reviewNotFound'])) {
-            // print_r($_SESSION['errorMessage']['reviewNotFound']);
         ?>
             toastr.error("<?= $_SESSION['errorMessage']['reviewNotFound'] ?>")
         <?php

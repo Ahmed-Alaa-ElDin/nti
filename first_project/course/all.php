@@ -12,12 +12,13 @@ $query = "SELECT `courses`.*,
 `teachers`.`first_name` AS `teacher_first_name`, 
 `teachers`.`last_name` AS `teacher_last_name` , 
 `student`.`count_student` AS `count_student`,
-`avg`.`avg_rating` AS `avg_rating`
+`avg`.`avg_rating` AS `avg_rating`,
+`avg`.`num_rating` AS `num_rating`
 FROM `courses` 
 LEFT JOIN `categories` ON `courses`.`category_id` = `categories`.`id` 
 LEFT JOIN `teachers` ON `courses`.`created_by` = `teachers`.`id` 
 LEFT JOIN (SELECT `course_id`, COUNT(`student_id`) AS `count_student` FROM `course_student` GROUP BY `course_id`) AS `student` ON `courses`.`id` = `student`.`course_id`
-LEFT JOIN (SELECT `course_id`, AVG(`rating`) AS `avg_rating` FROM `reviews` GROUP BY `course_id`) AS `avg` ON `courses`.`id` = `avg`.`course_id`";
+LEFT JOIN (SELECT `course_id`, AVG(`rating`) AS `avg_rating`, COUNT(`rating`) AS `num_rating` FROM `reviews` GROUP BY `course_id`) AS `avg` ON `courses`.`id` = `avg`.`course_id`";
 $results = mysqli_query($con, $query);
 ?>
 
@@ -79,7 +80,7 @@ $results = mysqli_query($con, $query);
                                                     <?= $course['teacher_last_name'] ? " " . $course['teacher_last_name'] : '' ?>
                                                 </td>
                                                 <td class="align-middle"><?= $course['count_student'] ? $course['count_student'] : 0 ?></td>
-                                                <td class="align-middle"><?= $course['avg_rating'] ? number_format($course['avg_rating'],2) : '0.00' ?></td>
+                                                <td class="align-middle"><?= $course['avg_rating'] ? number_format($course['avg_rating'],2) . " ($course[num_rating])" : '0.00 (0)' ?></td>
                                                 <td class="align-middle">
                                                     <div style="min-width: max-content;">
                                                         <a href="/nti/first_project/course/edit.php?id=<?= $course['id'] ?>" class="btn btn-primary btn-sm text-white">Edit</a>
