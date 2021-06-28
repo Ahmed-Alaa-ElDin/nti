@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Jun 27, 2021 at 05:35 AM
--- Server version: 10.4.16-MariaDB
--- PHP Version: 7.4.12
+-- Host: 127.0.0.1
+-- Generation Time: Jun 28, 2021 at 03:31 PM
+-- Server version: 10.4.19-MariaDB
+-- PHP Version: 8.0.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `courses4U`
+-- Database: `courses4u`
 --
 
 -- --------------------------------------------------------
@@ -117,30 +117,10 @@ INSERT INTO `courses` (`id`, `name`, `price`, `hours`, `minutes`, `course_img`, 
 (9, 'Naomi Guerra', 312, 33, 46, 'default_course.png	', 2, 49, '2021-06-26 03:48:02'),
 (10, 'Riley Ingram', 735, 64, 32, '13732012281624705564.png', 1, 22, '2021-06-26 03:53:31'),
 (12, 'Hamish Perez', 42, 80, 19, '5042367081624705550.jpeg', 3, 52, '2021-06-26 04:11:16'),
-(13, 'Rafael Grimes', 260, 26, 42, '3136825501624673486.jpeg', 3, 30, '2021-06-26 04:11:26');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `course_student`
---
-
-CREATE TABLE `course_student` (
-  `id` int(11) NOT NULL,
-  `course_id` int(11) DEFAULT NULL,
-  `student_id` int(11) DEFAULT NULL,
-  `join_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `expiry_date` datetime DEFAULT NULL,
-  `status` tinyint(4) NOT NULL COMMENT '0 --> pended ; 1 --> bought ; 2--> canceled'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `course_student`
---
-
-INSERT INTO `course_student` (`id`, `course_id`, `student_id`, `join_date`, `expiry_date`, `status`) VALUES
-(3, 12, 5, '2021-06-26 13:38:19', NULL, 1),
-(4, 13, 31, '2021-06-26 13:38:19', NULL, 1);
+(13, 'Rafael Grimes', 260, 26, 42, '3136825501624673486.jpeg', 3, 30, '2021-06-26 04:11:26'),
+(14, 'Reece Clements', 178, 92, 7, 'default_course.png	', 2, 23, '2021-06-28 14:44:00'),
+(15, 'Lydia Marquez', 452, 35, 3, 'default_course.png	', 3, 10, '2021-06-28 14:44:17'),
+(16, 'Mallory Thompson', 74, 20, 1, 'default_course.png	', 2, 51, '2021-06-28 14:44:41');
 
 -- --------------------------------------------------------
 
@@ -164,6 +144,26 @@ INSERT INTO `reviews` (`id`, `course_id`, `student_id`, `rating`, `review`) VALU
 (24, 2, 22, 2.5, 'dasdas'),
 (27, 6, 29, 2.5, '&lt;p&gt;&lt;strong&gt;Laborum molestiae pr. sdfsdfdsf&lt;/strong&gt;&lt;/p&gt;\r\n&lt;p style=&quot;text-align: center;&quot;&gt;&lt;em&gt;&lt;strong&gt;adasdasdasd&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;'),
 (28, 9, 8, 2, '&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong&gt;sdasdasdasdsadasd Ahmed&lt;/strong&gt;&lt;/p&gt;');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `statuses`
+--
+
+CREATE TABLE `statuses` (
+  `id` int(11) NOT NULL,
+  `name` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `statuses`
+--
+
+INSERT INTO `statuses` (`id`, `name`) VALUES
+(1, 'Pended'),
+(2, 'Bought'),
+(3, 'Canceled');
 
 -- --------------------------------------------------------
 
@@ -227,6 +227,29 @@ INSERT INTO `students` (`id`, `first_name`, `last_name`, `age`, `phone`, `email`
 (37, 'Lucian', 'Wolfe', 19, '01239226845', 'cipy@mailinator.com', '1bfe76a453e484de74a2cd5fc44bbb10b55b2f92', 'default_student.png	', 1, 1, NULL, '2021-06-25 05:31:44'),
 (38, 'Unity', 'Blair', 39, '01847965594', 'wapa@mailinator.com', '1bfe76a453e484de74a2cd5fc44bbb10b55b2f92', 'default_student.png	', 1, 4, 6, '2021-06-25 09:17:28'),
 (39, 'Mechelle', 'Sweet', 13, '01835946832', 'gogujaroqo@mailinator.com', 'ac748cb38ff28d1ea98458b16695739d7e90f22d', 'default_student.png	', 2, 5, NULL, '2021-06-25 13:06:01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subscriptions`
+--
+
+CREATE TABLE `subscriptions` (
+  `id` int(11) NOT NULL,
+  `course_id` int(11) DEFAULT NULL,
+  `student_id` int(11) DEFAULT NULL,
+  `join_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `expiry_date` datetime DEFAULT NULL,
+  `status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `subscriptions`
+--
+
+INSERT INTO `subscriptions` (`id`, `course_id`, `student_id`, `join_date`, `expiry_date`, `status_id`) VALUES
+(3, 12, 5, '2021-06-26 13:38:19', NULL, 1),
+(4, 13, 31, '2021-06-26 13:38:19', '2021-06-02 15:29:01', 2);
 
 -- --------------------------------------------------------
 
@@ -303,7 +326,9 @@ INSERT INTO `teachers` (`id`, `first_name`, `last_name`, `age`, `phone`, `email`
 (55, 'Aristotle', 'Marquez', 90, '01928216637', 'xokuducyq@mailinator.com', 'ac748cb38ff28d1ea98458b16695739d7e90f22d', 'default_teacher.png	', 1, 7, NULL, '2021-06-25 07:02:03'),
 (56, 'Kasper', 'Price', 71, '01121506996', 'suropavuw@mailinator.com', 'ac748cb38ff28d1ea98458b16695739d7e90f22d', 'default_teacher.png	', 1, 4, 6, '2021-06-25 09:19:23'),
 (57, 'Kelly', 'Holmes', 72, '01993871437', 'lijudafe@mailinator.com', 'ac748cb38ff28d1ea98458b16695739d7e90f22d', 'default_teacher.png	', 2, 6, NULL, '2021-06-25 13:08:10'),
-(58, 'aaaaaaaaaaa', NULL, 33, '01883102862', 'byfisix@mailinator.com', 'ac748cb38ff28d1ea98458b16695739d7e90f22d', 'default_teacher.png	', 1, 3, NULL, '2021-06-25 20:02:43');
+(58, 'aaaaaaaaaaa', NULL, 33, '01883102862', 'byfisix@mailinator.com', 'ac748cb38ff28d1ea98458b16695739d7e90f22d', 'default_teacher.png	', 1, 3, NULL, '2021-06-25 20:02:43'),
+(59, 'Patience', 'Whitney', 79, '+1 (298) 534-3388', 'bulo@mailinator.com', 'ac748cb38ff28d1ea98458b16695739d7e90f22d', 'default_teacher.png	', 2, 7, NULL, '2021-06-28 14:44:32'),
+(60, 'Ahmed Alaa', 'Hassan', 29, '01111339306', 'ph_ahmedalaa@azhar.edu.eg', 'ac748cb38ff28d1ea98458b16695739d7e90f22d', '10522252871624885375.jpeg', 1, 1, 2, '2021-06-28 15:02:55');
 
 --
 -- Indexes for dumped tables
@@ -337,14 +362,6 @@ ALTER TABLE `courses`
   ADD KEY `created_by` (`created_by`);
 
 --
--- Indexes for table `course_student`
---
-ALTER TABLE `course_student`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `student course` (`student_id`),
-  ADD KEY `course course` (`course_id`);
-
---
 -- Indexes for table `reviews`
 --
 ALTER TABLE `reviews`
@@ -353,12 +370,27 @@ ALTER TABLE `reviews`
   ADD KEY `users` (`student_id`);
 
 --
+-- Indexes for table `statuses`
+--
+ALTER TABLE `statuses`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id`),
   ADD KEY `city_id` (`city_id`),
   ADD KEY `country_id` (`country_id`);
+
+--
+-- Indexes for table `subscriptions`
+--
+ALTER TABLE `subscriptions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student course` (`student_id`),
+  ADD KEY `course course` (`course_id`),
+  ADD KEY `subscription status` (`status_id`);
 
 --
 -- Indexes for table `teachers`
@@ -394,13 +426,7 @@ ALTER TABLE `countries`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- AUTO_INCREMENT for table `course_student`
---
-ALTER TABLE `course_student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -409,16 +435,28 @@ ALTER TABLE `reviews`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
+-- AUTO_INCREMENT for table `statuses`
+--
+ALTER TABLE `statuses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
+-- AUTO_INCREMENT for table `subscriptions`
+--
+ALTER TABLE `subscriptions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- Constraints for dumped tables
@@ -438,13 +476,6 @@ ALTER TABLE `courses`
   ADD CONSTRAINT `created_by` FOREIGN KEY (`created_by`) REFERENCES `teachers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `course_student`
---
-ALTER TABLE `course_student`
-  ADD CONSTRAINT `course course` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `student course` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `reviews`
 --
 ALTER TABLE `reviews`
@@ -457,6 +488,14 @@ ALTER TABLE `reviews`
 ALTER TABLE `students`
   ADD CONSTRAINT `city_id` FOREIGN KEY (`city_id`) REFERENCES `cities` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `country_id` FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `subscriptions`
+--
+ALTER TABLE `subscriptions`
+  ADD CONSTRAINT `course course` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `student course` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `subscription status` FOREIGN KEY (`status_id`) REFERENCES `statuses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `teachers`
