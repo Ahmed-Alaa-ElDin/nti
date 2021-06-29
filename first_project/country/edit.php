@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <!-- Name -->
                                         <div class="offset-md-3 col-md-6 form-group text-center">
                                             <label for="name" class="font-weight-bold">Name</label>
-                                            <input type="text" id="name" class="form-control" placeholder="Enter Your First Name" name="name" value="<?= isset($_SESSION['oldData']['name']) ? $_SESSION['oldData']['name'] : (isset($country['name']) ? $country['name'] : "") ?>">
+                                            <input type="text" id="name" class="form-control" placeholder="Enter the Country Name" name="name" value="<?= isset($_SESSION['oldData']['name']) ? $_SESSION['oldData']['name'] : (isset($country['name']) ? $country['name'] : "") ?>">
                                             <?= (isset($_SESSION['errorMessages']['name'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['name'] . "</div>" : ''; ?>
                                         </div>
 

@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])) {
     $deleteQuery = "DELETE FROM `students` WHERE `id` = $id";
     $result = mysqli_query($con, $deleteQuery);
 
-    if (mysqli_affected_rows($con)) {
+    if (mysqli_affected_rows($con) == 1) {
         $_SESSION['successMessages'] = 'Student Deleted successfully';
 
         // redirect to all student

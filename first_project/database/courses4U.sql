@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 28, 2021 at 03:31 PM
--- Server version: 10.4.19-MariaDB
--- PHP Version: 8.0.6
+-- Host: localhost
+-- Generation Time: Jun 29, 2021 at 06:01 AM
+-- Server version: 10.4.16-MariaDB
+-- PHP Version: 7.4.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `courses4u`
+-- Database: `courses4U`
 --
 
 -- --------------------------------------------------------
@@ -111,7 +111,6 @@ CREATE TABLE `courses` (
 
 INSERT INTO `courses` (`id`, `name`, `price`, `hours`, `minutes`, `course_img`, `category_id`, `created_by`, `created_at`) VALUES
 (2, 'Est aliquip commodo ', 423, 0, 0, 'default_course.png', 1, 25, '2021-06-25 13:23:20'),
-(3, 'Debitis sadas', 32, 0, 0, 'default_course.png', 2, 10, '2021-06-25 13:24:04'),
 (6, 'Chandler Hester', 739, 4, 48, 'default_teacher.png	', 1, 40, '2021-06-26 03:45:51'),
 (8, 'Winter Murray', 43, 18, 20, 'default_teacher.png	', 1, 32, '2021-06-26 03:47:06'),
 (9, 'Naomi Guerra', 312, 33, 46, 'default_course.png	', 2, 49, '2021-06-26 03:48:02'),
@@ -248,8 +247,12 @@ CREATE TABLE `subscriptions` (
 --
 
 INSERT INTO `subscriptions` (`id`, `course_id`, `student_id`, `join_date`, `expiry_date`, `status_id`) VALUES
-(3, 12, 5, '2021-06-26 13:38:19', NULL, 1),
-(4, 13, 31, '2021-06-26 13:38:19', '2021-06-02 15:29:01', 2);
+(3, 16, 33, '1974-06-03 15:21:00', '2008-01-01 08:09:00', 1),
+(5, 14, 18, '1976-09-19 00:06:00', '1985-03-21 12:32:00', 2),
+(6, 13, 22, '1991-07-16 22:09:00', '1983-12-19 08:26:00', 3),
+(7, 10, 16, '1996-02-01 14:52:00', '1974-10-14 08:15:00', 1),
+(9, 6, 37, '2019-12-11 15:52:00', '1982-07-24 19:36:00', 3),
+(10, 14, 38, '2009-07-10 10:53:00', '2019-10-07 14:14:00', 3);
 
 -- --------------------------------------------------------
 
@@ -438,7 +441,7 @@ ALTER TABLE `reviews`
 -- AUTO_INCREMENT for table `statuses`
 --
 ALTER TABLE `statuses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `students`
@@ -450,7 +453,7 @@ ALTER TABLE `students`
 -- AUTO_INCREMENT for table `subscriptions`
 --
 ALTER TABLE `subscriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `teachers`

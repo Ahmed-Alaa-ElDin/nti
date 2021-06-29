@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_execute($stmt);
         
         // check insert success
-        if (mysqli_affected_rows($con)) {
+        if (mysqli_affected_rows($con) == 1) {
 
             $_SESSION['successMessages'] = 'New Course Added successfully';
 

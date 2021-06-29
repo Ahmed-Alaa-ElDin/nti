@@ -1,6 +1,6 @@
 <?php
 // prerequisite variables
-$title = 'Courses4U - Delete Course';
+$title = 'Courses4U - Delete Status';
 
 include(dirname(__DIR__) . '/includes/head.php');
 include(dirname(__DIR__) . '/permission/isTeacher.php');
@@ -20,17 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])) {
     $id = $_GET['id'];
     
     // excute delete query
-    $deleteQuery = "DELETE FROM `courses` WHERE `id` = $id";
+    $deleteQuery = "DELETE FROM `statuses` WHERE `id` = $id";
     $result = mysqli_query($con, $deleteQuery);
 
-    if (mysqli_affected_rows($con)) {
-        $_SESSION['successMessages'] = 'Course Deleted successfully';
+    if (mysqli_affected_rows($con) == 1) {
+        $_SESSION['successMessages'] = 'Status Deleted successfully';
 
-        // redirect to all course
+        // redirect to all statuses
         header("Location: all.php");
         exit();
     } else {
-        $_SESSION['errorMessage']['courseNotFound'] = 'This course isn\'t there';
+        $_SESSION['errorMessage']['statusNotFound'] = 'This status isn\'t there';
         header('location: all.php');
         exit();
     };

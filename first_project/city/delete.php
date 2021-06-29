@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])) {
     $deleteQuery = "DELETE FROM `cities` WHERE `id` = $id";
     $result = mysqli_query($con, $deleteQuery);
 
-    if (mysqli_affected_rows($con)) {
+    if (mysqli_affected_rows($con) == 1) {
         $_SESSION['successMessages'] = 'City Deleted successfully';
 
         // redirect to all city

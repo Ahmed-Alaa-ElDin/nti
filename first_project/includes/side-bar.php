@@ -98,6 +98,32 @@
                 </ul>
             </li>
 
+            <!-- Subscriptions -->
+            <li class="nav-item has-sub <?= isset($addSuscription) || isset($allSubscriptions) ? 'open' : '' ?>"><a href="#"><i class="ft-trending-up"></i><span class="menu-title" data-i18n="">Subscriptions</span></a>
+                <ul class="menu-content">
+                    <li class="<?= isset($addSuscription) ? 'active' : '' ?>">
+                        <a class="menu-item" href="/nti/first_project/subscription/add.php"><i class="ft-plus"></i>&nbsp; Add New Subscription</a>
+                    </li>
+                    <li class="<?= isset($allSubscriptions) ? 'active' : '' ?>">
+                        <a class="menu-item" href="/nti/first_project/subscription/all.php"><i class="ft-eye"></i>&nbsp; Show All Subscriptions</a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Statuses -->
+            <li class="nav-item has-sub <?= isset($addStatus) || isset($allStatuses) ? 'open' : '' ?>"><a href="#"><i class="ft-activity"></i><span class="menu-title" data-i18n="">Statuses</span></a>
+                <ul class="menu-content">
+                    <li class="<?= isset($addStatus) ? 'active' : '' ?>">
+                        <a class="menu-item" href="/nti/first_project/status/add.php"><i class="ft-plus"></i>&nbsp; Add New Status</a>
+                    </li>
+                    <li class="<?= isset($allStatuses) ? 'active' : '' ?>">
+                        <a class="menu-item" href="/nti/first_project/status/all.php"><i class="ft-eye"></i>&nbsp; Show All Statuses</a>
+                    </li>
+                </ul>
+            </li>
+
+
+
 
         </ul>
     </div>

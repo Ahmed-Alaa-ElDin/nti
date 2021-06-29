@@ -1,18 +1,13 @@
 <?php
-$allsubscriptions = true;
-$title = 'subscriptions4U - Subscriptions';
+$allStatuses = true;
+$title = 'Courses4U - Statuses';
 include(dirname(__DIR__) . '/includes/head.php');
 
 include(dirname(__DIR__) . '/permission/isTeacher.php');
 
 // print_r($_SESSION['errorMessages']);
-// get all subscriptions
-$query = "SELECT `subscriptions`.*, `courses`.*, `students`.* , `statuses`.`name` AS `status_name`
-            FROM `subscriptions` 
-            LEFT JOIN `courses` ON `subscriptions`.`course_id` = `courses`.`id`
-            LEFT JOIN `students` ON `subscriptions`.`student_id` = `students`.`id`
-            LEFT JOIN `statuses` ON `subscriptions`.`status_id` = `statuses`.`id`
-            "; 
+// get all statuss
+$query = "SELECT * FROM `statuses` LEFT JOIN (SELECT `status_id`, COUNT(*) AS `count_subscription` FROM `subscriptions` GROUP BY `status_id`) AS `subscription` ON `statuses`.`id` = `subscription`.`status_id`";
 $results = mysqli_query($con, $query);
 ?>
 
@@ -36,7 +31,7 @@ $results = mysqli_query($con, $query);
             <div class="content-wrapper-before"></div>
             <div class="content-header row">
                 <div class="col-12 text-center my-2">
-                    <h2 class="text-white font-weight-bold">All Subscriptions</h2>
+                    <h2 class="text-white font-weight-bold">All Statuses</h2>
                 </div>
             </div>
             <div class="content-body">
@@ -47,35 +42,21 @@ $results = mysqli_query($con, $query);
                                 <table id="myTable" class="w-100 text-center table table-striped table-bordered">
                                     <thead class="">
                                         <tr>
-                                            <th class="align-middle">Course</th>
-                                            <th class="align-middle">Student</th>
-                                            <th class="align-middle">Date of Join</th>
-                                            <th class="align-middle">Expiry Date</th>
-                                            <th class="align-middle">Status</th>
+                                            <th class="align-middle">Name</th>
+                                            <th class="align-middle"># Subscriptions</th>
                                             <th class="align-middle">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php while ($subscription = mysqli_fetch_assoc($results)) { ?>
+                                        <?php while ($status = mysqli_fetch_assoc($results)) { ?>
                                             <tr>
-                                                <td class="align-middle text-left">
-                                                    <div style="min-width: max-content;">
-                                                        <?= $subscription['course_img'] ? "<img src='/nti/first_project/uploads/$subscription[course_img]' style='width:40px;height:40px' class='rounded-circle'>" : "<img src='/nti/first_project/uploads/default_course.png' style='width:40px;height:40px' class='rounded-circle'>" ?> &nbsp;
-                                                        <?= $subscription['name'] ?>
-                                                    </div>
-                                                </td>
-                                                <td class="align-middle text-left">
-                                                    <div style="min-width: max-content;">
-                                                        <?= $subscription['profile_img'] ? "<img src='/nti/first_project/uploads/$subscription[profile_img]' style='width:40px;height:40px' class='rounded-circle'>" : "<img src='/nti/first_project/uploads/default_student.png' style='width:40px;height:40px' class='rounded-circle'>" ?> &nbsp;
-                                                        <?= $subscription['first_name'] ?> <?= $subscription['last_name'] ?>
-                                                    </div>
-                                                </td>                                                <td class="align-middle"><?= $subscription['join_date'] ?></td>
-                                                <td class="align-middle"><?= $subscription['expiry_date'] ? $subscription['expiry_date'] : 'No Expiry Date' ?></td>
-                                                <td class="align-middle"><?= $subscription['status_name'] ?></td>
+                                                
+                                                <td class="align-middle"><?= $status['name'] ?></td>
+                                                <td class="align-middle"><?= $status['count_subscription'] ? $status['count_subscription'] : 0 ?></td>
                                                 <td class="align-middle">
                                                     <div style="min-width: max-content;">
-                                                        <a href="/nti/first_project/subscription/edit.php?id=<?= $subscription['id'] ?>" class="btn btn-primary btn-sm text-white">Edit</a>
-                                                        <button type="button" class="btn btn-danger btn-sm text-white" data-toggle="modal" data-keyboard="false" data-target="#deleteTeacher" data-id="<?= $subscription['id'] ?>">
+                                                        <a href="/nti/first_project/status/edit.php?id=<?= $status['id'] ?>" class="btn btn-primary btn-sm text-white">Edit</a>
+                                                        <button type="button" class="btn btn-danger btn-sm text-white" data-toggle="modal" data-keyboard="false" data-target="#deleteTeacher" data-id="<?= $status['id'] ?>" data-name="<?= $status['name'] ?>">
                                                             Delete
                                                         </button>
                                                     </div>
@@ -105,13 +86,15 @@ $results = mysqli_query($con, $query);
                 </div>
                 <div class="modal-body text-center">
                     <div>Are you sure, you want to delete
-                        <span id="subscriptionName" class="font-weight-bold"></span>
+                        <span id="statusName" class="font-weight-bold"></span>
                         .
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn grey btn-secondary" data-dismiss="modal">Close</button>
-                    <a href="/nti/first_project/subscription/delete.php?id=<?= $subscription['id'] ?>" id="deletingButton" class="btn btn-danger text-white">Delete</a>
+                    <a href="/nti/first_project/status/delete.php?id=<?= $status['id'] ?>" id="deletingButton" class="btn btn-danger text-white">Delete</a>
+
+                    <!-- <button type="button" class="btn btn-danger">Save</button> -->
                 </div>
             </div>
         </div>
@@ -138,8 +121,8 @@ $results = mysqli_query($con, $query);
             var id = button.data('id')
             var name = button.data('name')
             var modal = $(this)
-            modal.find('#deletingButton').attr('href', '/nti/first_project/subscription/delete.php?id=' + id)
-            modal.find('#subscriptionName').text(name)
+            modal.find('#deletingButton').attr('href', '/nti/first_project/status/delete.php?id=' + id)
+            modal.find('#statusName').text(name)
         })
 
         // Add Toastr
@@ -151,11 +134,12 @@ $results = mysqli_query($con, $query);
             unset($_SESSION['successMessages']);
         }
 
-        if (isset($_SESSION['errorMessage']['subscriptionNotFound'])) {
+        if (isset($_SESSION['errorMessage']['statusNotFound'])) {
+            // print_r($_SESSION['errorMessage']['statusNotFound']);
         ?>
-            toastr.error("<?= $_SESSION['errorMessage']['subscriptionNotFound'] ?>")
+            toastr.error("<?= $_SESSION['errorMessage']['statusNotFound'] ?>")
         <?php
-            unset($_SESSION['errorMessage']['subscriptionNotFound']);
+            unset($_SESSION['errorMessage']['statusNotFound']);
         }
         ?>
     </script>

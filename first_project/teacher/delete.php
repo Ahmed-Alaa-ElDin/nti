@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])) {
     $deleteQuery = "DELETE FROM `teachers` WHERE `id` = $id";
     $result = mysqli_query($con, $deleteQuery);
 
-    if (mysqli_affected_rows($con)) {
+    if (mysqli_affected_rows($con) == 1) {
         $_SESSION['successMessages'] = 'Teacher Deleted successfully';
 
         // redirect to all teacher
-        header("Location: /nti/first_project/teacher/all.php");
+        header("Location: all.php");
         exit();
     } else {
         $_SESSION['errorMessage']['teacherNotFound'] = 'This teacher isn\'t there';

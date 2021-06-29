@@ -5,7 +5,6 @@ include(dirname(__DIR__) . '/includes/head.php');
 
 include(dirname(__DIR__) . '/permission/isTeacher.php');
 
-// print_r($_SESSION['errorMessages']);
 // get all courses
 $query = "SELECT `courses`.*, 
 `categories`.`name` AS `category`, 
@@ -17,9 +16,11 @@ $query = "SELECT `courses`.*,
 FROM `courses` 
 LEFT JOIN `categories` ON `courses`.`category_id` = `categories`.`id` 
 LEFT JOIN `teachers` ON `courses`.`created_by` = `teachers`.`id` 
-LEFT JOIN (SELECT `course_id`, COUNT(`student_id`) AS `count_student` FROM `course_student` GROUP BY `course_id`) AS `student` ON `courses`.`id` = `student`.`course_id`
+LEFT JOIN (SELECT `course_id`, COUNT(`student_id`) AS `count_student` FROM `subscriptions` GROUP BY `course_id`) AS `student` ON `courses`.`id` = `student`.`course_id`
 LEFT JOIN (SELECT `course_id`, AVG(`rating`) AS `avg_rating`, COUNT(`rating`) AS `num_rating` FROM `reviews` GROUP BY `course_id`) AS `avg` ON `courses`.`id` = `avg`.`course_id`";
+
 $results = mysqli_query($con, $query);
+
 ?>
 
 <body class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar" data-open="click" data-menu="vertical-menu" data-color="bg-chartbg" data-col="2-columns">

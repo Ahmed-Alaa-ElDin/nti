@@ -189,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $compreQuery = "SELECT * FROM `teachers` WHERE `id` = $id AND `password` = '$oldPassword'";
         $result = mysqli_query($con, $compreQuery);
 
-        if (mysqli_affected_rows($con)) {
+        if (mysqli_affected_rows($con) == 1) {
 
             // if the same of the old password from database validate new password
             if (isset($_POST['new_password']) && !empty($_POST['new_password'])) {
@@ -299,7 +299,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // redirect to home page
-        header("Location: /nti/first_project/teacher/all.php");
+        header("Location: all.php");
         exit();
     }
 }

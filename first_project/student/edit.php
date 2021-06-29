@@ -299,7 +299,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // redirect to home page
-        header("Location: /nti/first_project/student/all.php");
+        header("Location: all.php");
         exit();
     }
 }
