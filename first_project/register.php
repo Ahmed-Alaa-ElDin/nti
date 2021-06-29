@@ -372,28 +372,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <!-- First Name -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="fisrtName" class="font-weight-bold">First Name</label>
-                                            <input type="text" id="fisrtName" class="form-control" placeholder="Enter Your First Name" name="first_name" value=<?= isset($_SESSION['oldData']['first_name']) ? '"' .  $_SESSION['oldData']['first_name'] . '"' : "" ?> required>
+                                            <input type="text" id="fisrtName" class="form-control" placeholder="Enter Your First Name" name="first_name" value="<?= isset($_SESSION['oldData']['first_name']) ? $_SESSION['oldData']['first_name']  : "" ?>" required>
                                             <?= (isset($_SESSION['errorMessages']['first_name'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['first_name'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- Last Name -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="lastName" class="font-weight-bold">Last Name</label>
-                                            <input type="text" id="lastName" class="form-control" placeholder="Enter Your Last Name" name="last_name" value=<?= isset($_SESSION['oldData']['last_name']) ? '"' .  $_SESSION['oldData']['last_name'] . '"' : "" ?>>
+                                            <input type="text" id="lastName" class="form-control" placeholder="Enter Your Last Name" name="last_name" value="<?= isset($_SESSION['oldData']['last_name']) ? $_SESSION['oldData']['last_name'] : "" ?>">
                                             <?= (isset($_SESSION['errorMessages']['last_name'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['last_name'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- E-mail -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="email" class="font-weight-bold">E-mail</label>
-                                            <input type="text" id="email" class="form-control" placeholder="Enter Your E-mail" name="email" value=<?= isset($_SESSION['oldData']['email']) ? '"' .  $_SESSION['oldData']['email'] . '"' : "" ?> required>
+                                            <input type="text" id="email" class="form-control" placeholder="Enter Your E-mail" name="email" value="<?= isset($_SESSION['oldData']['email']) ? $_SESSION['oldData']['email'] : "" ?>" required>
                                             <?= (isset($_SESSION['errorMessages']['email'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['email'] . "</div>" : ''; ?>
                                         </div>
 
                                         <!-- Contact Namber -->
                                         <div class="col-md-4 form-group text-center">
                                             <label for="contactNumber" class="font-weight-bold">Contact Number</label>
-                                            <input type="text" id="contactNumber" class="form-control" placeholder="Enter Your Contact Number" name="phone" value=<?= isset($_SESSION['oldData']['phone']) ? '"' .  $_SESSION['oldData']['phone'] . '"' : "" ?>>
+                                            <input type="text" id="contactNumber" class="form-control" placeholder="Enter Your Contact Number" name="phone" value="<?= isset($_SESSION['oldData']['phone']) ? $_SESSION['oldData']['phone'] : "" ?>">
                                             <?= (isset($_SESSION['errorMessages']['phone'])) ? "<div class='badge badge-danger mt-1'>" . $_SESSION['errorMessages']['phone'] . "</div>" : ''; ?>
                                         </div>
 
