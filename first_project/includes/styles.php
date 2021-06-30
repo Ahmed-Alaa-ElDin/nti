@@ -1,6 +1,6 @@
     <!-- BEGIN VENDOR CSS-->
     <link rel="stylesheet" type="text/css" href="/nti/first_project/theme-assets/css/vendors.css">
-    <link rel="stylesheet" type="text/css" href="/nti/first_project/theme-assets/vendors/css/charts/chartist.css">
+    <!-- <link rel="stylesheet" type="text/css" href="/nti/first_project/theme-assets/vendors/css/charts/chartist.css"> -->
     <link rel="stylesheet" type="text/css" href="/nti/first_project/theme-assets/vendors/css/tables/datatable/jquery.dataTables.min.css">
     <!-- END VENDOR CSS-->
     <!-- BEGIN CHAMELEON  CSS-->

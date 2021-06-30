@@ -11,7 +11,7 @@
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             <li class="nav-item"><a href="/nti/first_project/teacher/"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
             </li>
-            <li class="nav-item"><a href="/nti/first_project/student/"><i class="ft-home"></i><span class="menu-title" data-i18n="">Home</span></a>
+            <li class="nav-item"><a href="/nti/first_project/"><i class="ft-home"></i><span class="menu-title" data-i18n="">Home</span></a>
             </li>
 
             <!-- Teachers -->
