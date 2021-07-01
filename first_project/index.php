@@ -97,7 +97,7 @@ $topCoursesResults = mysqli_query($con, $query);
                             <div class="card pull-up bg-white rounded overflow-hidden">
                                 <img class="card-img-top rounded" src='/nti/first_project/uploads/placeholder_course.png'>
                                 <div class="card-body">
-                                    <a href="#" class="btn btn-secondary d-block">See All Courses</a>
+                                    <a href="student/courses/all.php" class="btn btn-secondary d-block">See All Courses</a>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +164,7 @@ $topCoursesResults = mysqli_query($con, $query);
                             <div class="card pull-up bg-white rounded overflow-hidden">
                                 <img class="card-img-top rounded" src='/nti/first_project/uploads/placeholder_course.png'>
                                 <div class="card-body">
-                                    <a href="#" class="btn btn-secondary d-block">See All Courses</a>
+                                    <a href="student/courses/all.php" class="btn btn-secondary d-block">See All Courses</a>
                                 </div>
                             </div>
                         </div>

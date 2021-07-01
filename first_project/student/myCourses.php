@@ -95,7 +95,7 @@ $results = mysqli_query($con, $query);
                     </button>
                 </div>
                 <div class="modal-body text-center">
-                    <div>Are you sure, you want to delete this course from your cart ??</div>
+                    <div>Are you sure, you want to delete this course from your courses ??</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn grey btn-secondary" data-dismiss="modal">Close</button>
