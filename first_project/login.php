@@ -10,6 +10,12 @@ $style =
 
 // include head tag
 include(dirname(__DIR__) . '/first_project/includes/head.php');
+// $_SESSION['errorMessages'] ='asd';
+// print_r($_SESSION);
+// exit();
+// if (isset($_SESSION['errorMessages'])) {
+//     unset($_SESSION['errorMessages']);
+// }
 
 // check if the user logged in
 if (isset($_SESSION['user'])) {
@@ -100,20 +106,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $query = "SELECT * FROM `students` WHERE `email` = '$email' AND `password` = '$password'";
                 $result = mysqli_query($con, $query);
                 mysqli_num_rows($result);
-                
+
                 if (mysqli_num_rows($result) > 0) {
                     $data = mysqli_fetch_assoc($result);
-                    
+
                     $_SESSION['successMessages'] = 'You Logged in successfully';
-                    
+
                     $_SESSION['user']['first_name']    =    $data['first_name'];
                     $_SESSION['user']['last_name']     =    $data['last_name'];
                     $_SESSION['user']['email']         =    $data['email'];
                     $_SESSION['user']['profile_img']   =    $data['profile_img'];
                     $_SESSION['user']['role_id']       =    2;
-                    
+
                     header("Location: student/");
-                    
+
                     exit();
                 } else {
                     $_SESSION['errorMessages']['studentLogin'] = '<strong>Invalid Credentials</strong>, Please try again';
@@ -253,6 +259,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     include(dirname(__DIR__) . '/first_project/includes/scripts.php');
     ?>
 
+    <script>
+        // Add Toastr
+        <?php
+        if (isset($_SESSION['successMessages'])) {
+        ?>
+            toastr.success('<?= $_SESSION['successMessages'] ?>')
+        <?php
+            unset($_SESSION['successMessages']);
+        }
+
+        if (isset($_SESSION['errorMessages'])) {
+        ?>
+            toastr.error('<?= $_SESSION['errorMessages'] ?>')
+        <?php
+            unset($_SESSION['errorMessages']);
+        }
+        ?>
+    </script>
 </body>
 
 </html>

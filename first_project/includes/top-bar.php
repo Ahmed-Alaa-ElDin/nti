@@ -1,3 +1,17 @@
+<?php
+if (isset($cart)) {
+    $query = "SELECT COUNT(*) AS `Count` FROM `subscriptions` WHERE `student_id` = " . $_SESSION['user']['id'] . " AND `status_id` = 1";
+    $result = mysqli_query($con, $query);
+    $cartCount = mysqli_fetch_assoc($result);
+
+    $query = "SELECT COUNT(*) AS `Count` FROM `subscriptions` WHERE `student_id` = " . $_SESSION['user']['id'] . " AND `status_id` = 2";
+    $result = mysqli_query($con, $query);
+    $coursesCount = mysqli_fetch_assoc($result);
+
+    // print_r($cartCount['Count']);
+}
+?>
+
 <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow fixed-top navbar-semi-light">
     <div class="navbar-wrapper">
         <div class="navbar-container content">
@@ -39,15 +53,32 @@
                     </li>
                 </ul> -->
                 <ul class="nav navbar-nav float-right">
-                    <!-- <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon ft-mail"> </i></a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <div class="arrow_box_right">
-                                <a class="dropdown-item" href="#"><i class="ft-book"></i> Read Mail</a>
-                                <a class="dropdown-item" href="#"><i class="ft-bookmark"></i> Read Later</a>
-                                <a class="dropdown-item" href="#"><i class="ft-check-square"></i> Mark all Read </a>
-                            </div>
-                        </div>
-                    </li> -->
+                    <?php
+                    if (isset($cart)) {
+                    ?>
+                        <li class="dropdown dropdown-notification nav-item mr-2">
+                            <a class="nav-link nav-link-label" href="student/myCart.php" title="My Cart">
+                                <i class="ficon ft-shopping-cart"> </i>
+                                <span id="myCart" class="badge badge-danger position-absolute" style="font-size: 0.75em;"><?= $cartCount['Count'] ?></span>
+                            </a>
+                        </li>
+                    <?php
+                    }
+                    ?>
+
+                    <?php
+                    if (isset($cart)) {
+                    ?>
+                        <li class="dropdown dropdown-notification nav-item mr-2">
+                            <a class="nav-link nav-link-label" href="student/myCourses.php" title="My Courses">
+                                <i class="ficon ft-book"> </i>
+                                <span id="myCart" class="badge badge-success text-dark position-absolute" style="font-size: 0.75em;"><?= $coursesCount['Count'] ?></span>
+                            </a>
+                        </li>
+                    <?php
+                    }
+                    ?>
+
                     <?php
                     if (isset($_SESSION['user'])) {
                     ?>
@@ -61,7 +92,7 @@
                                         </span>
                                     </div>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/nti/first_project/teacher/edit.php?id=<?=$_SESSION['user']['id']?>"><i class="ft-user"></i> Edit Profile</a>
+                                    <a class="dropdown-item" href="/nti/first_project/teacher/edit.php?id=<?= $_SESSION['user']['id'] ?>"><i class="ft-user"></i> Edit Profile</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="/nti/first_project/logout.php"><i class="ft-power"></i> Logout</a>
                                 </div>
